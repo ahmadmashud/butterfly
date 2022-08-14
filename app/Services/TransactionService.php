@@ -14,4 +14,5 @@ interface TransactionService
     function  get(int $id);
     function  delete(int $id);
     function  edit(Request $request, int $id);
+    function editStatus(Request $request);
 }

@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TransactionServiceImpl implements TransactionService
 {
@@ -492,5 +493,48 @@ class TransactionServiceImpl implements TransactionService
         $transaction_fnd->whereNotIn('id', $request->id_t_fnd)->each(function ($trx) {
             $trx->delete();
         });
+    }
+
+    function editStatus(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $transaction =  Transaction::where('id', $request->id)->firstOrFail();
+            $terapis = Terapis::where('id', $transaction->id_terapis)->firstOrFail();
+            $to_status = $request->status;
+            Log::info($to_status);
+            Log::info($request->id);
+            if ($to_status == 'FINISHING') {
+                Log::info('masuk');
+                // ONLY STATUS TERAPIS
+                $terapis['status'] = $to_status;
+            } else if ($to_status == 'AVAILABLE') {
+                Log::info('masuk 2');
+                // STOP TRX
+                $transaction['status'] = 'FINISHED';
+                $transaction->save();
+
+                // update flag in terapis
+                $terapis->status = 'AVAILABLE';
+                $terapis->save();
+
+                // update flag in room
+                $room = Room::where('id', $transaction->id_room)->firstOrFail();
+                $room->is_used = false;
+                $room->save();
+                // update flag in loker
+                $loker = Loker::where('id', $transaction->id_loker)->firstOrFail();
+                $loker->is_used = false;
+                $loker->save();
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            dd($e);
+            // todo redirect to error page
+            return redirect()
+                ->route('user.index')
+                ->with('warning', 'Something Went Wrong!');
+        }
     }
 }

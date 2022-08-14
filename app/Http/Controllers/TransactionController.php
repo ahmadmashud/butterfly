@@ -244,4 +244,12 @@ class TransactionController extends Controller
                 'title' => 'Riwayat Transaksi'
             ]);
     }
+    
+    public function editStatus(Request $request)
+    {
+        $this->transactionService->editStatus($request);
+        return response()->json([
+            'data' => true
+        ]);
+    }
 }

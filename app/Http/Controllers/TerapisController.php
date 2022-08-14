@@ -49,7 +49,8 @@ class TerapisController extends Controller
             ->select(
                 'm_terapis.*',
                 't_transactions.status as trx_status',
-                't_transactions.tanggal_keluar'
+                't_transactions.tanggal_keluar',
+                't_transactions.id as id_trx'
             )
             ->get();
         return response()

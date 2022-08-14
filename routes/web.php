@@ -209,6 +209,8 @@ Route::controller(TransactionController::class)->group(function () {
     Route::get("/transactions/edit/{id}", "edit")->middleware(OnlyMemberMiddleware::class);
     // EDIT ACTION
     Route::post("/transactions/edit/{id}", "editAction")->middleware(OnlyMemberMiddleware::class);
+    // EDIT STATUS ACTION
+    Route::get("/transactions/{id}/status/{status}", "editStatus")->middleware(OnlyMemberMiddleware::class);
 });
 
 
@@ -223,7 +225,7 @@ Route::controller(RoleController::class)->group(function () {
     Route::get("/roles/{id}", "get")->middleware(OnlyMemberMiddleware::class);
     // EDIT    
     Route::post("/roles/edit", "edit")->middleware(OnlyMemberMiddleware::class);
-    
+
     // SETTING AKSES
     Route::get("/roles/privilege", "getPrivilege")->middleware(OnlyMemberMiddleware::class);
     // ADD AKSES
@@ -241,7 +243,7 @@ Route::controller(LaporanController::class)->group(function () {
     // DOWNLOAD LAPORAN FND
     Route::get("/laporan/download/fnd", "download_laporan_fnd")->middleware(OnlyMemberMiddleware::class);
 
-    
+
     // MENU R
     Route::get("/laporan/r", "r")->middleware(OnlyMemberMiddleware::class);
 });
