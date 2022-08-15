@@ -508,6 +508,7 @@ class TransactionServiceImpl implements TransactionService
                 Log::info('masuk');
                 // ONLY STATUS TERAPIS
                 $terapis['status'] = $to_status;
+                $terapis->save();
             } else if ($to_status == 'AVAILABLE') {
                 Log::info('masuk 2');
                 // STOP TRX

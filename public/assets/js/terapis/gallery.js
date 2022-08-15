@@ -1,12 +1,13 @@
 $('[data-countdown]').each(function () {
     var $this = $(this),
         finalDate = $(this).data('countdown'),
-        status = $(this).data('status'),
         id = $(this).data('id');
     $this.countdown(finalDate, function (event) {
         if (finalDate != '') {
             $this.html(event.strftime('%H:%M:%S'));
 
+            var status = $(this).data('status');
+            
             if (status == 'PROGRESING' && event.offset.minutes == 10) {
                 $(this).data('status', 'FINISHING');
                 $(this).parent().parent()[0].style.backgroundColor = 'aqua';
