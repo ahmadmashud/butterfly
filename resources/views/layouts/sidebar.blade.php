@@ -58,6 +58,11 @@
                         <a id="menu_laporan_fnd" href="/laporan/fnd">Laporan F&D</a>
                     </li>
                     @endif
+                    @if( in_array('LAPORAN', Session::get('privileges')) )
+                    <li>
+                        <a id="menu_laporan_produk" href="/laporan/products">Laporan Produk</a>
+                    </li>
+                    @endif
                 </ul>
             </li>
 

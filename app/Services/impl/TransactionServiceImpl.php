@@ -15,6 +15,7 @@ use App\Models\Sequence;
 use App\Models\Terapis;
 use App\Models\Transaction;
 use App\Models\TransactionFoodDrink;
+use App\Models\TransactionProduct;
 use App\Models\User;
 use App\Services\TransactionService;
 use Carbon\Carbon;
@@ -33,7 +34,6 @@ class TransactionServiceImpl implements TransactionService
 
     function add(Request $request)
     {
-
         DB::beginTransaction();
 
         try {
@@ -41,6 +41,10 @@ class TransactionServiceImpl implements TransactionService
             $transaction = $this->toModelTransaction($request);
             $transaction =  Transaction::create($transaction);
             $transaction->save();
+
+            // save trx produk
+            $products = $this->toModelProductTrx($request, $transaction->id);
+            DB::table('t_transaction_products')->insert($products);
 
             // save trx fnd if exists fnd
             if ($request->id_fnd != null) {
@@ -154,7 +158,7 @@ class TransactionServiceImpl implements TransactionService
 
         DB::beginTransaction();
         try {
-            $transaction =  Transaction::where('id', $request->id)->firstOrFail();
+            $transaction =  Transaction::with(['product_trx'])->where('id', $request->id)->firstOrFail();
             // if cancel then don update status to PAID
             $transaction['status'] = $request->metode_pembayaran != 'CANCEL' ? 'PAID' : 'CANCEL';
             $transaction->save();
@@ -183,10 +187,15 @@ class TransactionServiceImpl implements TransactionService
 
     function generateKomisiTerapis(Transaction $transaction)
     {
+        // komisi produk terapis
+        $komisi_produk = $transaction->product_trx->sum(function ($item) {
+            return $item->product->km_terapis * $item->qty;
+        });
+
         $komisi['id_trx'] = $transaction->id;
         $komisi['id_terapis'] = $transaction->id_terapis;
         $komisi['amount_km_paket'] = $transaction->paket->km_terapis;
-        $komisi['amount_km_produk'] = $transaction->produk->km_terapis;
+        $komisi['amount_km_produk'] = $komisi_produk;
         $komisi['sesi'] = $transaction->jumlah_sesi;
         $komisi['amount_km_total'] = $komisi['amount_km_paket'] *  $komisi['sesi'] + $komisi['amount_km_produk'];
         KomisiTerapis::create($komisi);
@@ -204,11 +213,16 @@ class TransactionServiceImpl implements TransactionService
 
     function generateKomisiSales(Transaction $transaction)
     {
+        // komisi produk sales/gro
+        $komisi_produk = $transaction->product_trx->sum(function ($item) {
+            return $item->product->km_gro * $item->qty;
+        });
+
         $user = User::where('id', $transaction->id_sales)->firstOrFail();
         $komisi['id_trx'] = $transaction->id;
         $komisi['id_user'] = $transaction->id_sales;
         $komisi['role_id'] = $user->role_id;
-        $komisi['amount_km_produk'] = $transaction->produk->km_gro;
+        $komisi['amount_km_produk'] = $komisi_produk;
         $komisi['amount_km_total'] = $komisi['amount_km_produk'];
         KomisiUser::create($komisi);
     }
@@ -221,20 +235,49 @@ class TransactionServiceImpl implements TransactionService
                 return $user->role->code != 'GRO';
             });
 
-        $users->each(function ($user) use ($transaction) {
+        // komisi user sTaff
+        $komisi_produk_staff = $transaction->product_trx->sum(function ($item) {
+            return $item->product->km_staff * $item->qty;
+        });
+        // komisi user spv
+        $komisi_produk_spv = $transaction->product_trx->sum(function ($item) {
+            return $item->product->km_spv * $item->qty;
+        });
+
+        $users->each(function ($user) use ($transaction, $komisi_produk_spv, $komisi_produk_staff) {
             $komisi['id_trx'] = $transaction->id;
             $komisi['id_user'] = $user->id;
             $komisi['role_id'] = $user->role_id;
             $komisi_amount = 0;
             if ($user->role->code == 'STAFF') {
-                $komisi_amount  = $transaction->produk->km_staff;
+                $komisi_amount  = $komisi_produk_staff;
             } else if ($user->role->code == 'SPV') {
-                $komisi_amount  = $transaction->produk->km_spv;
+                $komisi_amount  = $komisi_produk_spv;
             }
             $komisi['amount_km_produk'] = $komisi_amount;
             $komisi['amount_km_total'] = $komisi['amount_km_produk'];
             KomisiUser::create($komisi);
         });
+    }
+
+    function toModelProductTrx(Request $request, $id)
+    {
+        $list_produk = new Collection();
+        for ($i = 0; $i < count($request->id_produk); $i++) {
+            $harga = HelperCustom::unformatNumber($request->harga_produk[$i]);
+            $qty = HelperCustom::unformatNumber($request->qty_produk[$i]);
+            $total = $harga * $qty;
+            $data =  [
+                'id_produk' => $request->id_produk[$i],
+                'id_trx' =>  $id,
+                'qty' =>  $qty,
+                'harga' => $harga,
+                'total' => $total,
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+            ];
+            $list_produk->push($data);
+        }
+        return $list_produk->toArray();
     }
 
     function toModelFnd(Request $request, $id)
@@ -345,6 +388,10 @@ class TransactionServiceImpl implements TransactionService
             $transaction =  $this->toEditTrx($request, $id);
             $transaction->save();
 
+
+            // edit trx product
+            $this->handlingEditProduct($request, $id);
+
             // edit trx fnd if exists
             $this->handlingEditFnd($request, $id);
 
@@ -434,6 +481,44 @@ class TransactionServiceImpl implements TransactionService
         $transaction['amount_total_pajak'] =  $transaction['amount_total'] * $transaction['pajak_term'];
 
         return $transaction;
+    }
+
+    function handlingEditProduct($request, $id)
+    {
+        $transaction_product = TransactionProduct::where('id_trx', $id)->get();
+        // request to collection
+        $req_product_collection = collect([]);
+        $req_product = isset($request->id_produk) ? $request->id_produk : array();
+        for ($i = 0; $i < count($req_product); $i++) {
+            $product_req = [
+                'id' => isset($request->id_t_product[$i]) ? $request->id_t_product[$i] : null,
+                'id_produk' => $request->id_produk[$i],
+                'harga' => HelperCustom::unformatNumber($request->harga_produk[$i]),
+                'qty' => $request->qty_produk[$i],
+                'total' =>  $request->qty_produk[$i] * HelperCustom::unformatNumber($request->harga_produk[$i])
+            ];
+            $req_product_collection->push($product_req);
+        }
+
+        // insert or update in product trx
+        $req_product_collection->each(function ($item) use ($transaction_product, $id) {
+            $product_trx =  $transaction_product->firstWhere('id', $item['id']);
+            if ($product_trx != null) {
+                $product_trx['harga'] = $item['harga'];
+                $product_trx['qty'] = $item['qty'];
+                $product_trx['total'] = $item['total'];
+                $product_trx->save();
+            } else {
+                $item['id_trx'] = $id;
+                $item['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
+                TransactionProduct::create($item);
+            }
+        });
+
+        // delete not send data from FE
+        $transaction_product->whereNotIn('id', $request->id_t_product)->each(function ($trx) {
+            $trx->delete();
+        });
     }
 
     function handlingEditFnd($request, $id)

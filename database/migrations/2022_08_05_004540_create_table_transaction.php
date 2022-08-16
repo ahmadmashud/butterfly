@@ -25,7 +25,7 @@ class CreateTableTransaction extends Migration
             $table->dateTime('tanggal_masuk')->nullable();
             $table->dateTime('tanggal_keluar')->nullable();
             $table->integer('id_paket');
-            $table->integer('id_produk');
+            $table->integer('id_produk')->nullable();
             $table->integer('id_terapis');
             $table->integer('id_sales');
             $table->integer('id_supplier');

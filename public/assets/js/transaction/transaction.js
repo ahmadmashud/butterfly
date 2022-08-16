@@ -10,12 +10,16 @@ $("#form").each(function () {
             date: "required",
             durasi: "required",
             paket: "required",
-            produk: "required",
             terapis: "required",
             id_sales: "required"
         },
         submitHandler: function (form) {
             // $('#loading').show();
+            var produk_size = $('[name="id_produk[]"]').length;
+            if(produk_size  <= 0){
+                alert('Produk belum dipilih!!');
+                return false;
+            }
             submit();
         }
     });
@@ -105,22 +109,6 @@ $(document).on('change', '[name=fnd]', function (e) {
 //================ END HANDLING FND
 
 // MAIN TRX ADD
-$(document).on('change', '[name=produk]', function (e) {
-    var id = this.value;
-    $.ajax({
-        type: 'GET',
-        url: base_url + 'products/' + id,
-        success: function (data) {
-            var data = data.data;
-            $('[name=total_harga_produk]').val(formatMoney(data.harga));
-            calculateTotal();
-        },
-        error: function (err) {
-            debugger;
-        }
-    });
-});
-
 
 $(document).on('change', '[name=paket]', function (e) {
     var id = this.value;
@@ -166,7 +154,8 @@ function calculateTotal() {
     var total_diskon = unformatMoney($('[name=total_discount]').val());
     var jumlah_sesi = $('[name=jumlah_sesi]').val();
     var total_harga_room = unformatMoney($('[name=harga_room]').val()) * (jumlah_sesi) - total_diskon;
-    var total_harga_produk = unformatMoney($('[name=total_harga_produk]').val());
+    // var total_harga_produk = unformatMoney($('[name=total_harga_produk]').val());
+    var total_harga_produk = getTotalProduk();
     var total_fnd = unformatMoney($('[name=total_fnd]').val());
     var total = total_harga_room + total_harga_produk + total_fnd;
     var service_charge = unformatMoney($('[name=service_charge]').val());
@@ -205,10 +194,10 @@ $("#form_payment").each(function () {
             nama: "required"
         },
         submitHandler: function (form) {
-            debugger;
             var totalPaid = Number(cash.value) + Number(credit.value);
             var total = accounting.unformat($('[name=total]').val());
-            if (totalPaid < total) {
+            var metode_pembayaran = $('[name=metode_pembayaran]').val();
+            if (totalPaid < total && (metode_pembayaran != 'FOC' && metode_pembayaran != 'CANCEL')) {
                 alert('Pembayaran Kurang dari Total Tagihan');
                 return
             }
@@ -222,7 +211,7 @@ $(document).on('keyup', '.calculate_kembalian', function (e) {
     var totalCash = accounting.unformat($('[name=cash]').val());
     var totalCredit = accounting.unformat($('[name=credit]').val());
     var kembalian = (totalCash + totalCredit) - totalTagihan;
-    if(kembalian < 0){
+    if (kembalian < 0) {
         kembalian = 0;
     }
     $('[name=kembalian]').val(formatMoney(kembalian));
@@ -296,3 +285,74 @@ $(document).on('click', '.btnPayment', function (e) {
         }
     });
 });
+
+
+/// HANDLING ADD PRODUK
+
+$(document).on('change', '[name=produk]', function (e) {
+    var id = this.value;
+    $.ajax({
+        type: 'GET',
+        url: base_url + 'products/' + id,
+        success: function (data) {
+            var data = data.data;
+            // $('[name=total_harga_produk]').val(formatMoney(data.harga));
+            $('[name=produk]').attr('harga', data.harga);
+        },
+        error: function (err) {
+            debugger;
+        }
+    });
+});
+
+$(document).on('click', '#add_produk', function (e) {
+    var id_produk = $('[name=produk]').val();
+    var isHasSelected = $("[name='id_produk[]']").map(function() {    
+        return this.value == id_produk;
+    })[0];
+
+    if (id_produk == '') {
+        alert('Pilih Produk!');
+        return;
+    }
+
+    if (isHasSelected) {
+        alert('Produk sudah dipilih!');
+        return;
+    }
+    var nama = $('[name=produk] :selected').text();
+    var harga = $('[name=produk]').attr('harga');
+    $(`<div class="col-sm-6 form-group">
+    <input class="form-control" type="text" value="` + nama + `" readonly>
+    <input name="id_produk[]"  class="form-control" type="hidden" value="` + id_produk + `" readonly>
+    </div>
+    <div class="col-sm-4 form-group">
+    <input type="hidden" name="harga_produk[]" value="` + harga + `"  >
+    <input min="1" name="qty_produk[]" value="1"  class="qty_produk form-control" type="number"  >
+    </div>`)
+        .appendTo('#produk_form');
+    calculateTotal();
+});
+
+
+$(document).on('change', '.qty_produk', function (e) {
+    calculateTotal();
+});
+
+$(document).on('click', '#btn_reset_produk', function (e) {
+    $('#produk_form').children().remove();
+    calculateTotal();
+});
+
+
+function getTotalProduk() {
+    var produk_size = $('[name="id_produk[]"]').length;
+    var total = 0;
+    var harga = $('[name="harga_produk[]"]');
+    var qty = $('[name="qty_produk[]"]');
+    for (let index = 0; index < produk_size; index++) {
+        total = total + harga[index].value * qty[index].value;
+    }
+    $('[name=total_harga_produk]').val(formatMoney(total));
+    return total;
+}

@@ -51,7 +51,7 @@ class TerapisController extends Controller
                 't_transactions.status as trx_status',
                 't_transactions.tanggal_keluar',
                 't_transactions.id as id_trx'
-            )
+            )->where('is_active', true)
             ->get();
         return response()
             ->view('terapis.gallery', [

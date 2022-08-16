@@ -58,9 +58,10 @@
                         <th>F&D</th>
                         <th>Total</th>
                         <th>Service Charge</th>
-                        <th>Grand Total</th>
                         <th>Pajak</th>
+                        <th>Grand Total</th>
                         <th>Jenis Pembayaran</th>
+                        <th>Print Struk</th>
                         <!-- <th>Print</th> -->
                     </tr>
                 </thead>
@@ -81,12 +82,12 @@
                         <td>@convert($value->amount_total_fnd)</td>
                         <td>@convert($value->amount_total)</td>
                         <td>@convert($value->amount_total_service_charge)</td>
-                        <td>@convert($value->amount_grand_total)</td>
                         <td>@convert($value->amount_total_pajak)</td>
+                        <td>@convert($value->amount_grand_total)</td>
                         <td>{{ $value->payment != null ? config('constants.metode_pembayaran')[$value->payment->metode_pembayaran] : '-'}}</td>
-                        <!-- <td>
-                            <a href="/laporan/print/{{ $value->id }}" class="btn btn-primary">Print</a>
-                        </td> -->
+                        <td>
+                            <a href="/laporan/print/{{ $value->id }}" class="btn btn-success"><span class="fa fa-print"></span></a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

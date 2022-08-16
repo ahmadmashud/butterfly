@@ -19,6 +19,10 @@
                     <input required name="nama" class="form-control" type="text" placeholder="Nama Terapis">
                   </div>
                   <div class="form-group">
+                    <label>ID Terapis</label>
+                    <input required name="code" class="form-control" type="text" placeholder="ID Terapis">
+                  </div>
+                  <div class="form-group">
                     <label>Foto</label>
                     <input required name="foto" class="form-control" type="file">
                   </div>

@@ -12,3 +12,9 @@ $(document).on('click', '#btnPrintFnd', function (e) {
     a.click();
 });
 
+$(document).on('click', '#btnPrintProduct', function (e) {
+    var a = document.createElement('a');
+    a.href = base_url + 'laporan/download/products?' + $('#formFilter').serialize();
+    a.target = '_blank';
+    a.click();
+});

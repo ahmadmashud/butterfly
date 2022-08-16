@@ -46,4 +46,9 @@ class Transaction extends Model
     {
         return $this->hasOne(Payment::class, 'id_transaction', 'id');
     }
+
+    public function product_trx()
+    {
+        return $this->hasMany(TransactionProduct::class, 'id_trx', 'id');
+    }
 }

@@ -49,14 +49,18 @@
                             @if($value->foto != null)
                             <img src="{{ asset('storage'.config('constants.file_folder_terapis').'/'.$value->foto) }}" width="100" height="100" />
                             @else
-                              -
+                            -
                             @endif
                         </td>
-                        <td ><p style="background-color: {{ config('constants.status_terapis_color')[$value->status] }}">{{ config('constants.status_terapis')[$value->status] }}</p></td>
-                        <td><input disabled type="checkbox" {{ $value->is_active ? "checked" : "" }} 
-                        data-toggle="toggle" data-on="Aktif" 
-                        data-off="Non Aktif" data-onstyle="success" 
-                        data-offstyle="danger" data-size="sm" data-width="100" ></td>
+
+                        @if($value->is_active)
+                        <td>
+                            <p style="background-color: {{ config('constants.status_terapis_color')[$value->status] }}">{{ config('constants.status_terapis')[$value->status] }}</p>
+                        </td>
+                        @else
+                        <td>Non Aktif</td>
+                        @endif
+                        <td><input disabled type="checkbox" {{ $value->is_active ? "checked" : "" }} data-toggle="toggle" data-on="Aktif" data-off="Non Aktif" data-onstyle="success" data-offstyle="danger" data-size="sm" data-width="100"></td>
                         <td>
                             <form action="/terapis/{{ $value->id }}/delete" method="post">
                                 @csrf

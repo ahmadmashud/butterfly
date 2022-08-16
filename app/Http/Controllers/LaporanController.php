@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\LaporanExport;
 use App\Exports\LaporanFndExport;
+use App\Exports\LaporanProductExport;
 use App\Helpers\HelperCustom;
 use App\Services\LaporanService;
 use Illuminate\Http\Request;
@@ -76,7 +77,6 @@ class LaporanController extends Controller
         return Excel::download(new LaporanFndExport($data), 'Laporan_FND' . HelperCustom::formatDate($tanggal_awal) . 'sd' . HelperCustom::formatDate($tanggal_akhir)  . '.xlsx');
     }
 
-    
 
     public function r(Request $request): Response
     {
@@ -91,5 +91,33 @@ class LaporanController extends Controller
                 'metode_pembayaran' =>  $request->metode_pembayaran,
                 'title' => 'Laporan'
             ]);
+    }
+
+    
+    public function view_product(Request $request): Response
+    {
+        if (HelperCustom::isValidAccess('LAPORAN')) {
+
+            return abort(401);
+        }
+        $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
+        $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
+
+        $data = $this->laporanService->getProducts($tanggal_awal, $tanggal_akhir);
+        return response()
+            ->view('laporan.product.index', [
+                'data' =>  $data,
+                'tanggal_awal' => $tanggal_awal,
+                'tanggal_akhir' =>  $tanggal_akhir,
+                'title' => 'Laporan Produk'
+            ]);
+    }
+
+    public function download_laporan_products(Request $request)
+    {
+        $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
+        $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
+        $data = $this->laporanService->getProducts($tanggal_awal, $tanggal_akhir);
+        return Excel::download(new LaporanProductExport($data), 'Laporan_PRODUK' . HelperCustom::formatDate($tanggal_awal) . 'sd' . HelperCustom::formatDate($tanggal_akhir)  . '.xlsx');
     }
 }

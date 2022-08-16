@@ -95,21 +95,6 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-5 form-group">
-                                        <label>Produk </label>
-                                    </div>
-                                    <div class="col-sm-7 form-group">
-                                        <select name="produk" class="form-control" required>
-                                            <option value="">Pilih Produk</option>
-                                            @foreach( $products as $key => $value)
-                                            <option {{ $data->id_produk == $value->id ? 'selected' : '' }} value="{{$value->id}}">
-                                                {{$value->nama}}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-5 form-group">
                                         <label>Terapis </label>
                                     </div>
                                     <div class="col-sm-7 form-group">
@@ -139,6 +124,57 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <hr width="100%" style="border-top: 3px line #bbb;" />
+                                <div class="row">
+                                    <div class="col-sm-5 form-group">
+                                        <label>Produk </label>
+                                    </div>
+                                    <div class="col-sm-5 form-group">
+                                        <select name="produk" class="form-control">
+                                            <option value="">Pilih</option>
+                                            @foreach( $products as $key => $value)
+                                            <option value="{{$value->id}}">{{$value->nama}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2 form-group">
+                                        <button type="button" class="btn btn-primary" id="add_produk">+</button>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 form-group">
+                                        Nama Produk
+                                    </div>
+                                    <div class="col-sm-4 form-group text-center">
+                                        Qty
+                                    </div>
+                                </div>
+                                <div class="row" id="produk_form">
+
+                                    @foreach($data->product_trx as $product => $valueProduct)
+                                    <div class="col-sm-6 form-group">
+                                        <input name="id_t_product[]" class="form-control" type="hidden" value="{{$valueProduct->id}}" readonly>
+                                        <input class="form-control" type="text" value="{{$valueProduct->product->nama}}" readonly>
+                                        <input name="id_produk[]" class="form-control" type="hidden" value="{{$valueProduct->id_produk}}" readonly>
+                                    </div>
+                                    <div class="col-sm-4 form-group text-center">
+
+                                        <input type="hidden" name="harga_produk[]" value="{{$valueProduct->harga}}"/>
+                                        <input name="qty_produk[]" min="1" class="form-control qty_produk" type="number" value="{{$valueProduct->qty}}">
+                                    </div>
+                                    @endforeach
+                                </div>
+
+                                <div class="row text-right">
+                                    <div class="col-sm-12 form-group">
+                                        <button id="btn_reset_produk" type="button" class="btn btn-danger">
+                                            Reset
+                                        </button>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <!-- TOTAL -->
@@ -180,7 +216,7 @@
                                         <label>Produk </label>
                                     </div>
                                     <div class="col-sm-7 form-group">
-                                        <input value="@convert($data->amount_harga_produk)" name="total_harga_produk" class="form-control amount" type="text" readonly>
+                                        <input value="@convert($data->amount_harga_produk)" name="total_harga_produk" class="form-control amount" type="text" required readonly>
                                     </div>
                                 </div>
 

@@ -122,7 +122,7 @@
                             <label>Produk: </label>
                         </div>
                         <div class="col-sm-9 form-group">
-                            <input value="@convert($value->produk->harga)" class="form-control amount" type="text" readonly>
+                            <input value="@convert($value->amount_harga_produk)" class="form-control amount" type="text" readonly>
                         </div>
                     </div>
                     <div class="row">

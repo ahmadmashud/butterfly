@@ -20,14 +20,13 @@ class TerapisServiceImpl implements TerapisService
     {
         // upload foto
         $filename = File::uploadSingleFileV2($request->foto, config('constants.file_folder_terapis'));
-        dd($filename);
         $terapis['nama'] = $request->nama;
         $terapis['foto'] = $filename;
         $terapis['status'] = array_key_first(config('constants.status_terapis'));
         $terapis['is_active'] = true;
-       
+
         $terapis = Terapis::create($terapis);
-        $terapis['code'] = HelperCustom::generateTrxNo('TP', $terapis->id);
+        $terapis['code'] = $request->code;
         $terapis->save();
     }
 
@@ -55,6 +54,7 @@ class TerapisServiceImpl implements TerapisService
             $terapis->foto = $filename;
         }
         $terapis->nama = $request->nama;
+        $terapis->code =  $request->code;
         $terapis->status = $request->status;
         $terapis->is_active = $request->is_active == "on" ? true : false;
         $terapis->save();

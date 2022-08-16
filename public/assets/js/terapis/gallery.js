@@ -13,7 +13,7 @@ $('[data-countdown]').each(function () {
                 $(this).parent().parent()[0].style.backgroundColor = 'aqua';
                 triggerStatus(id, 'FINISHING');
 
-            } else if (status == 'FINISHING' && event.offset.minutes == 00 && event.offset.seconds == 0) {
+            } else if (event.offset.minutes == 00 && event.offset.seconds == 0) {
                 $(this).data('status', 'AVAILABLE');
                 $(this).parent().parent()[0].style.backgroundColor = '#00ff00';
                 triggerStatus(id, 'AVAILABLE');

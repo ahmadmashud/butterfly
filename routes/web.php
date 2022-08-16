@@ -242,8 +242,11 @@ Route::controller(LaporanController::class)->group(function () {
     Route::get("/laporan/download", "download_laporan")->middleware(OnlyMemberMiddleware::class);
     // DOWNLOAD LAPORAN FND
     Route::get("/laporan/download/fnd", "download_laporan_fnd")->middleware(OnlyMemberMiddleware::class);
-
-
+   
+    Route::get("/laporan/products", "view_product")->middleware(OnlyMemberMiddleware::class);
+    // DOWNLOAD LAPORAN PRODUK
+    Route::get("/laporan/download/products", "download_laporan_products")->middleware(OnlyMemberMiddleware::class);
+    
     // MENU R
     Route::get("/laporan/r", "r")->middleware(OnlyMemberMiddleware::class);
 });
