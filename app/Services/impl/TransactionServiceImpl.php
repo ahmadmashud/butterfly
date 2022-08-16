@@ -83,33 +83,34 @@ class TransactionServiceImpl implements TransactionService
         DB::beginTransaction();
         try {
             $transaction =  Transaction::where('id', $id)->firstOrFail();
-            $transaction['status'] = 'CANCEL';
-            $transaction->save();
+            if ($transaction['status'] == 'ACCEPTED') {
+                $transaction['status'] = 'CANCEL';
+                $transaction->save();
 
-            // update flag in terapis
-            $terapis = Terapis::where('id', $transaction->id_terapis)->firstOrFail();
-            $terapis->status = 'AVAILABLE';
-            $terapis->save();
+                // update flag in terapis
+                $terapis = Terapis::where('id', $transaction->id_terapis)->firstOrFail();
+                $terapis->status = 'AVAILABLE';
+                $terapis->save();
 
-            // update flag in room
-            $room = Room::where('id', $transaction->id_room)->firstOrFail();
-            $room->is_used = false;
-            $room->save();
+                // update flag in room
+                $room = Room::where('id', $transaction->id_room)->firstOrFail();
+                $room->is_used = false;
+                $room->save();
 
-            // update flag in loker
-            $loker = Loker::where('id', $transaction->id_loker)->firstOrFail();
-            $loker->is_used = false;
-            $loker->save();
+                // update flag in loker
+                $loker = Loker::where('id', $transaction->id_loker)->firstOrFail();
+                $loker->is_used = false;
+                $loker->save();
 
-            // set cancel in payment
-            $payment['id_transaction'] = $transaction->id;
-            $payment['metode_pembayaran'] = 'CANCEL';
-            $payment['amount_cash'] = 0;
-            $payment['amount_credit'] = 0;
-            $payment['amount_total'] = 0;
-            $payment =  Payment::create($payment);
-
-            DB::commit();
+                // set cancel in payment
+                $payment['id_transaction'] = $transaction->id;
+                $payment['metode_pembayaran'] = 'CANCEL';
+                $payment['amount_cash'] = 0;
+                $payment['amount_credit'] = 0;
+                $payment['amount_total'] = 0;
+                $payment =  Payment::create($payment);
+                DB::commit();
+            }
         } catch (\Exception $e) {
             DB::rollback();
             dd($e);
@@ -125,24 +126,26 @@ class TransactionServiceImpl implements TransactionService
         DB::beginTransaction();
         try {
             $transaction =  Transaction::where('id', $id)->firstOrFail();
-            $transaction['status'] = 'FINISHED';
-            $transaction->save();
+            if ($transaction['status'] == 'ACCEPTED') {
+                $transaction['status'] = 'FINISHED';
+                $transaction->save();
 
-            // update flag in terapis
-            $terapis = Terapis::where('id', $transaction->id_terapis)->firstOrFail();
-            $terapis->status = 'AVAILABLE';
-            $terapis->save();
+                // update flag in terapis
+                $terapis = Terapis::where('id', $transaction->id_terapis)->firstOrFail();
+                $terapis->status = 'AVAILABLE';
+                $terapis->save();
 
-            // update flag in room
-            $room = Room::where('id', $transaction->id_room)->firstOrFail();
-            $room->is_used = false;
-            $room->save();
+                // update flag in room
+                $room = Room::where('id', $transaction->id_room)->firstOrFail();
+                $room->is_used = false;
+                $room->save();
 
-            // update flag in loker
-            $loker = Loker::where('id', $transaction->id_loker)->firstOrFail();
-            $loker->is_used = false;
-            $loker->save();
-            DB::commit();
+                // update flag in loker
+                $loker = Loker::where('id', $transaction->id_loker)->firstOrFail();
+                $loker->is_used = false;
+                $loker->save();
+                DB::commit();
+            }
         } catch (\Exception $e) {
             DB::rollback();
             dd($e);
