@@ -249,6 +249,7 @@ Route::controller(LaporanController::class)->group(function () {
     
     // MENU R
     Route::get("/laporan/r", "r")->middleware(OnlyMemberMiddleware::class);
+    Route::post("/laporan/r", "r_choose")->middleware(OnlyMemberMiddleware::class);
 });
 
 

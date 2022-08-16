@@ -92,8 +92,12 @@ class LaporanController extends Controller
                 'title' => 'Laporan'
             ]);
     }
+    public function r_choose(Request $request)
+    {
+        $data = $this->laporanService->choose($request);
+        return redirect("/laporan/r");
+    }
 
-    
     public function view_product(Request $request): Response
     {
         if (HelperCustom::isValidAccess('LAPORAN')) {

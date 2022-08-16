@@ -3,9 +3,11 @@
 namespace App\Services\impl;
 
 use App\Models\Transaction;
+use App\Models\Transaction2;
 use App\Models\TransactionFoodDrink;
 use App\Models\TransactionProduct;
 use App\Services\LaporanService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -62,6 +64,18 @@ class LaporanServiceImpl implements LaporanService
             ->join('t_transactions', 't_transactions.id', '=', 't_transaction_products.id_trx')
             ->join('m_products', 'm_products.id', '=', 't_transaction_products.id_produk')
             ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
-            ->groupBy('trx_no','nama', 'tanggal', 'harga')->orderBy('tanggal', 'desc')->get();
+            ->groupBy('trx_no', 'nama', 'tanggal', 'harga')->orderBy('tanggal', 'desc')->get();
+    }
+
+    function  choose(Request $request)
+    {
+        foreach ($request->id as $key => $value) {
+            $trx =  Transaction2::firstWhere('id', $value);
+            if ($trx == null) {
+                $item['id_trx'] =  $value;
+                $item['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
+                Transaction2::create($item);
+            }
+        };
     }
 }
