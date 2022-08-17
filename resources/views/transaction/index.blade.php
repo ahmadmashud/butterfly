@@ -22,11 +22,11 @@
                 <div class="ibox-body">
                     <div class="row">
                         <div class="col-sm-12" style="text-align:center;">
-                            <h3>LOKER</h3>
+                            <h3 style="color:white">LOKER</h3>
                         </div>
 
                         @foreach($lokers as $key => $value)
-                        <div class="col-sm-3 {{ $value->is_used ? 'used' : '' }}" style="border-style: solid;border-color: black;text-align: center;">
+                        <div class="col-sm-3 {{ $value->is_used ? 'used' : 'unused' }}" style="border-style: solid;border-color: black;text-align: center;">
                             {{$value->no}}
                         </div>
                         @endforeach

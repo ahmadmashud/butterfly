@@ -19,6 +19,9 @@
     } .used{
         background-color: red;
         color: white;
+    }.unused{
+        background-color: white;
+        color: black;
     }.amount{
         text-align: right;
     }.text-center{
@@ -29,4 +32,36 @@
         width: auto;
         margin: 0 auto;
     }
+    .page-sidebar{
+        background-color: #0d0250;
+    }
+    
+    .content-wrapper{
+        background-color: #000036;
+    }
+    .header, .page-brand{
+        color: white;
+        background-color: #1600a1;
+    }
+    .ibox{
+        font-weight: bold;
+        background-color: #008381;
+    }
+    .ibox-head{
+        color:white;
+        background-color: #1c1e82;
+    }
+    .page-title{
+        color:white;
+    }.nav-2-level{
+        background-color: #1500a5;
+    }
+    table td,th{
+        background-color: white;
+    }
+    .modal-content{
+        background-color: #010081;
+        color:white;
+    }
+</style>
 </style>

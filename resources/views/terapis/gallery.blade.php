@@ -26,7 +26,7 @@
                 <div style="background-color: yellow;" class="col-md-2">
                     <h4>Book</h4>
                 </div>
-                <div class="col-md-2">
+                <div style="background-color: white;" class="col-md-2">
                     <h4>Off</h4>
                 </div>
             </div>

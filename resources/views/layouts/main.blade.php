@@ -13,7 +13,7 @@
     <div class="page-wrapper">
         <!-- START HEADER-->
         <header class="header">
-            <div class="page-brand">
+            <div class="page-brand" style="background-color: #1600a1;">
                 <a class="link" href="/">
                     <span class="brand">
                         <span class="brand-tip">Butterfly Message</span>
