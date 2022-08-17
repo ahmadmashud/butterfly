@@ -1,7 +1,8 @@
 $('[data-countdown]').each(function () {
     var $this = $(this),
         finalDate = $(this).data('countdown'),
-        id = $(this).data('id');
+        id = $(this).data('id'),
+        code = $(this).data('code');
     $this.countdown(finalDate, function (event) {
         if (finalDate != '') {
             $this.html(event.strftime('%H:%M:%S'));
@@ -16,6 +17,7 @@ $('[data-countdown]').each(function () {
             } else if (event.offset.minutes == 00 && event.offset.seconds == 0) {
                 $(this).data('status', 'AVAILABLE');
                 $(this).parent().parent()[0].style.backgroundColor = '#00ff00';
+                $(this)[0].innerHTML = code;
                 triggerStatus(id, 'AVAILABLE');
             }
 

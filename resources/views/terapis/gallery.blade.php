@@ -60,7 +60,7 @@
                 </tr>
                 <tr style="background-color: {{ config('constants.status_terapis_color')[$value->status] }}">
                     <th>
-                        <div data-id="{{ $value->id_trx }}" style="text-align: center;width: 21px;" data-status="{{ $value->status }}" data-countdown="{{$value->tanggal_keluar}}">
+                        <div data-code="{{ $value->code }}" data-id="{{ $value->id_trx }}" style="text-align: center;width: 21px;" data-status="{{ $value->status }}" data-countdown="{{$value->tanggal_keluar}}">
                         {{$value->tanggal_keluar == null ? $value->code : ''}}
                         </div>
                     </th>
