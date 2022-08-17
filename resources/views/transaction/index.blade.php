@@ -5,7 +5,17 @@
 @section('breadcumb',$title)
 
 @section('content')
-
+<style>
+    .loker-container{
+        background-color: unset;
+        margin-top:120px;    
+        width: 220px;
+        min-height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+</style>
 <div class="page-heading">
     <!-- <h3 class="page-title" style="text-align: center;">Daftar {{$title}}</h3> -->
     <div class="d-flex justify-content-end" style="margin-top: 10px;">
@@ -15,29 +25,29 @@
     </div>
 </div>
 <div class="page-content fade-in-up">
-    <div class="row">
-        <div class="col-md-2" style="position: relative;">
-            <div class="ibox">
 
-                <div class="ibox-body">
-                    <div class="row">
-                        <div class="col-sm-12" style="text-align:center;">
-                            <h3 style="color:white">LOKER</h3>
-                        </div>
+    <div class="col-md-3 loker-container" >
+        <div class="ibox">
 
-                        @foreach($lokers as $key => $value)
-                        <div class="col-sm-3 {{ $value->is_used ? 'used' : 'unused' }}" style="border-style: solid;border-color: black;text-align: center;">
-                            {{$value->no}}
-                        </div>
-                        @endforeach
-
+            <div class="ibox-body">
+                <div class="row">
+                    <div class="col-sm-12" style="text-align:center;">
+                        <h3 style="color:white">LOKER</h3>
                     </div>
+
+                    @foreach($lokers as $key => $value)
+                    <div class="col-sm-3 {{ $value->is_used ? 'used' : 'unused' }}" style="border-style: solid;border-color: black;text-align: center;">
+                        {{$value->no}}
+                    </div>
+                    @endforeach
+
                 </div>
             </div>
         </div>
-
+    </div>
+    <div class="row" style="margin-left: 200px;">
         @foreach($data as $key => $value)
-        <div class="col-md-3" style="position: relative; ">
+        <div class="col-md-4" >
             <div class="ibox">
                 <div class="ibox-head">
                     <div class="ibox-title text-center">LOKER : {{$value->loker->no}}</div>

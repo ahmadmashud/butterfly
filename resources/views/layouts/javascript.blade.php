@@ -31,6 +31,9 @@
     $(function() {
         $('#example-table').DataTable({
             pageLength: 25,
+            scrollY: "800px",
+            scrollX: true,
+            scrollCollapse: true,
         });
 
         $('#example-table-fixed-column-scrollx').DataTable({
