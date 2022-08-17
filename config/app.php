@@ -181,7 +181,8 @@ return [
         App\Providers\RoomServiceProvider::class,
         App\Providers\LokerServiceProvider::class,
         App\Providers\TerapisServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class
 
     ],
 
@@ -240,7 +241,7 @@ return [
         'FileHelper' => App\Helpers\File::class,
         'HelperCustom' => App\Helpers\HelperCustom::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

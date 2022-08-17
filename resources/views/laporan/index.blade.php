@@ -86,7 +86,7 @@
                         <td>@convert($value->amount_grand_total)</td>
                         <td>{{ $value->payment != null ? config('constants.metode_pembayaran')[$value->payment->metode_pembayaran] : '-'}}</td>
                         <td>
-                            <a href="/laporan/print/{{ $value->id }}" class="btn btn-success"><span class="fa fa-print"></span></a>
+                            <a href="/laporan/transaction/{{ $value->id }}/pdf" target="_blank" class="btn btn-success"><span class="fa fa-print"></span></a>
                         </td>
                     </tr>
                     @endforeach

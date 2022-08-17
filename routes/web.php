@@ -236,17 +236,19 @@ Route::controller(RoleController::class)->group(function () {
 Route::controller(LaporanController::class)->group(function () {
     // MENU
     Route::get("/laporan", "index")->middleware(OnlyMemberMiddleware::class);
+    // DOWNLOAD STRUK LAPORAN
+    Route::get("/laporan/transaction/{id}/pdf", "generate_receipt")->middleware(OnlyMemberMiddleware::class);
     // MENU FND
     Route::get("/laporan/fnd", "view_fnd")->middleware(OnlyMemberMiddleware::class);
     // DOWNLOAD LAPORAN
     Route::get("/laporan/download", "download_laporan")->middleware(OnlyMemberMiddleware::class);
     // DOWNLOAD LAPORAN FND
     Route::get("/laporan/download/fnd", "download_laporan_fnd")->middleware(OnlyMemberMiddleware::class);
-   
+
     Route::get("/laporan/products", "view_product")->middleware(OnlyMemberMiddleware::class);
     // DOWNLOAD LAPORAN PRODUK
     Route::get("/laporan/download/products", "download_laporan_products")->middleware(OnlyMemberMiddleware::class);
-    
+
     // MENU R
     Route::get("/laporan/r", "r")->middleware(OnlyMemberMiddleware::class);
     Route::post("/laporan/r", "r_choose")->middleware(OnlyMemberMiddleware::class);

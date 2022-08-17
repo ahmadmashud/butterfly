@@ -7,6 +7,8 @@ use App\Exports\LaporanFndExport;
 use App\Exports\LaporanProductExport;
 use App\Helpers\HelperCustom;
 use App\Services\LaporanService;
+use App\Services\TransactionService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,9 +19,11 @@ class LaporanController extends Controller
     private LaporanService $laporanService;
 
     public function __construct(
-        LaporanService $laporanService
+        LaporanService $laporanService,
+        TransactionService  $transactionService
     ) {
         $this->laporanService = $laporanService;
+        $this->transactionService = $transactionService;
     }
 
     public function index(Request $request): Response
@@ -123,5 +127,18 @@ class LaporanController extends Controller
         $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
         $data = $this->laporanService->getProducts($tanggal_awal, $tanggal_akhir);
         return Excel::download(new LaporanProductExport($data), 'Laporan_PRODUK' . HelperCustom::formatDate($tanggal_awal) . 'sd' . HelperCustom::formatDate($tanggal_akhir)  . '.xlsx');
+    }
+
+    public function generate_receipt(int $id)
+    {
+        
+        $transaction = $this->transactionService->get($id);
+        $data = [
+            'data' => $transaction
+        ];
+        $customPaper = array(0,0,567.00,283.80);
+        $pdf = PDF::loadView('laporan.print.receipt', $data)->setPaper($customPaper, 'landscape');;
+
+        return $pdf->stream('testing.pdf');
     }
 }
