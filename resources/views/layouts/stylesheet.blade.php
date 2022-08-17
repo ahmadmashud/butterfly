@@ -11,6 +11,9 @@
 <link href="https://cdn.datatables.net/fixedcolumns/4.1.0/css/fixedColumns.bootstrap4.min.css" rel="stylesheet">
 
 <style>
+    h4{
+        color: white;
+    }
     button {
         cursor: pointer;
     }

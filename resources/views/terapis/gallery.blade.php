@@ -5,6 +5,11 @@
 @section('breadcumb',$title)
 
 @section('content')
+<style>
+  table td, th {
+    background-color: unset;
+}
+</style>
 
 <div class="background-gray" style="position: fixed;width: 85%;border: 1px solid gray;">
 
@@ -12,22 +17,22 @@
         <div class="col-md-12 text-center">
             <div class="row">
                 <div style="background-color: #00ff00;" class="col-md-2">
-                    <h4>Available</h4>
+                    <h3>Available</h3>
                 </div>
                 <div style="background-color: #f742ff;" class="col-md-2">
-                    <h4>Progressing</h4>
+                    <h3>Progressing</h3>
                 </div>
                 <div style="background-color: aqua;" class="col-md-2">
-                    <h4>Finshing</h4>
+                    <h3>Finshing</h3>
                 </div>
                 <div style="background-color: blue;" class="col-md-2">
-                    <h4>Resting</h4>
+                    <h3>Resting</h3>
                 </div>
                 <div style="background-color: yellow;" class="col-md-2">
-                    <h4>Book</h4>
+                    <h3>Book</h3>
                 </div>
                 <div style="background-color: white;" class="col-md-2">
-                    <h4>Off</h4>
+                    <h3>Off</h3>
                 </div>
             </div>
         </div>
