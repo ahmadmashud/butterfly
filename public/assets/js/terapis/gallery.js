@@ -8,7 +8,7 @@ $('[data-countdown]').each(function () {
 
             var status = $(this).data('status');
             
-            if (status == 'PROGRESING' && event.offset.minutes == 10) {
+            if (status == 'PROGRESING' && event.offset.minutes <= 10) {
                 $(this).data('status', 'FINISHING');
                 $(this).parent().parent()[0].style.backgroundColor = 'aqua';
                 triggerStatus(id, 'FINISHING');
