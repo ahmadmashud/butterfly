@@ -15,11 +15,6 @@ $("#form").each(function () {
         },
         submitHandler: function (form) {
             // $('#loading').show();
-            var produk_size = $('[name="id_produk[]"]').length;
-            if(produk_size  <= 0){
-                alert('Produk belum dipilih!!');
-                return false;
-            }
             submit();
         }
     });

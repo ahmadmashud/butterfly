@@ -120,7 +120,7 @@
                                         <label>Produk </label>
                                     </div>
                                     <div class="col-sm-5 form-group">
-                                        <select name="produk" class="form-control" required>
+                                        <select name="produk" class="form-control">
                                             <option value="">Pilih</option>
                                             @foreach( $products as $key => $value)
                                             <option value="{{$value->id}}">{{$value->nama}}</option>

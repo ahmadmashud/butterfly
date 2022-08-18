@@ -43,8 +43,10 @@ class TransactionServiceImpl implements TransactionService
             $transaction->save();
 
             // save trx produk
-            $products = $this->toModelProductTrx($request, $transaction->id);
-            DB::table('t_transaction_products')->insert($products);
+            if ($request->id_produk != null) {
+                $products = $this->toModelProductTrx($request, $transaction->id);
+                DB::table('t_transaction_products')->insert($products);
+            }
 
             // save trx fnd if exists fnd
             if ($request->id_fnd != null) {

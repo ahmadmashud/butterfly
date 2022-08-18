@@ -18,10 +18,11 @@ class KomisiGajiServiceImpl implements KomisiGajiService
                 't_komisi_users.id_user',
                 'm_users.nama',
                 'm_roles.nama as jabatan',
-                DB::raw("COUNT(t_komisi_users.amount_km_produk) as total_produk"),
+                DB::raw("SUM(t_transaction_products.qty) as total_produk"),
                 DB::raw("SUM(t_komisi_users.amount_km_total) as fee_produk")
             )
             ->join('t_transactions', 't_transactions.id', '=', 't_komisi_users.id_trx')
+            ->join('t_transaction_products', 't_transactions.id', '=', 't_transaction_products.id_trx')
             ->join('m_users', 'm_users.id', '=', 't_komisi_users.id_user')
             ->join('m_roles', 'm_roles.id', '=', 'm_users.role_id')
             ->where('m_users.id', $id)

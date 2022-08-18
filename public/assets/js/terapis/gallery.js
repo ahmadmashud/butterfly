@@ -9,12 +9,12 @@ $('[data-countdown]').each(function () {
 
             var status = $(this).data('status');
             
-            if (status == 'PROGRESING' && event.offset.minutes <= 10) {
+            if (status == 'PROGRESING' && event.offset.hours == 0 && event.offset.minutes <= 10) {
                 $(this).data('status', 'FINISHING');
                 $(this).parent().parent()[0].style.backgroundColor = 'aqua';
                 triggerStatus(id, 'FINISHING');
 
-            } else if (event.offset.minutes == 00 && event.offset.seconds == 0) {
+            } else if (event.offset.hours == 0 && event.offset.minutes == 00 && event.offset.seconds == 0) {
                 $(this).data('status', 'AVAILABLE');
                 $(this).parent().parent()[0].style.backgroundColor = '#00ff00';
                 $(this)[0].innerHTML = code;
