@@ -9,6 +9,7 @@
         font-family: Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
+        table-layout: fixed;
     }
 
     #customers td,
@@ -39,6 +40,7 @@
         text-align: left;
         background-color: #D9D9D9;
         color: black;
+        font-weight: bold;
     }
 
     .number {
@@ -54,6 +56,7 @@
     <h1 style="text-align:center">Rekapitulasi Penjualan</h1>
     <p style="text-align:center">{{HelperCustom::formatDate(@$tanggal_awal) }} s/d {{ HelperCustom::formatDate(@$tanggal_akhir) }}</p>
 
+    @php $grand_total = 0 @endphp
     @foreach($data as $key => $obj)
     <h2>{{ $key }}</h2>
     <table id="customers">
@@ -82,12 +85,20 @@
             @endforeach
         </tbody>
         <tfoot>
+
+            @php $grand_total = $grand_total + $total @endphp
             <td style="background-color: unset;border:none" class="text" colspan="5"></td>
             <td class="number">@convert($total)</td>
         </tfoot>
     </table>
     <br>
     @endforeach
+    <table id="customers">
+        <tfoot>
+            <td style="border:none" class="text" colspan="5">Total Penjualan</td>
+            <td class="number">@convert($grand_total)</td>
+        </tfoot>
+    </table>
 </body>
 
 </html>

@@ -39,6 +39,7 @@
         text-align: left;
         background-color: #D9D9D9;
         color: black;
+        font-weight: bold;
     }
 
 .number {
