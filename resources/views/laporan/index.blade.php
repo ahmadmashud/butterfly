@@ -13,7 +13,7 @@
 <div class="page-content fade-in-up">
     <div class="ibox">
         <div class="ibox-body">
-            <form id="formFilter" action="/laporan">
+            <form id="formFilter" action="{{route('laporan')}}">
                 <div class="form-inline" style="font-size: 17px;">
                     <label class="sr-only">Tanggal Awal</label>
                     <input required name="tanggal_awal" class="form-control mb-2 mr-sm-2 mb-sm-0" type="date" placeholder="Tanggal awal" value="{{@$tanggal_awal}}">

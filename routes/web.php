@@ -235,7 +235,7 @@ Route::controller(RoleController::class)->group(function () {
 
 Route::controller(LaporanController::class)->group(function () {
     // MENU
-    Route::get("/laporan", "index")->middleware(OnlyMemberMiddleware::class);
+    Route::get("/laporan", "index")->name('laporan')->middleware(OnlyMemberMiddleware::class);
     // DOWNLOAD STRUK LAPORAN
     Route::get("/laporan/transaction/{id}/pdf", "generate_receipt")->middleware(OnlyMemberMiddleware::class);
     // MENU FND
