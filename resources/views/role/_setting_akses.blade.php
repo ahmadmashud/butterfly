@@ -10,7 +10,7 @@
                   <h5 class="modal-title" id="exampleModalLabel">Atur Akses <span id="role_nama"></span> </h5>
                   @csrf
                   <input type="hidden" name="id" />
-                  <table style="width: 100%;text-align: center;font-weight:bold" border="1">
+                  <table style="width: 100%;text-align: center;font-weight:bold;    color: black;" border="1">
                     <thead>
                       <tr style="background-color: #dadada;">
                         <th style="text-align: center;">Nama</th>
