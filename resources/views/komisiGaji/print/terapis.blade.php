@@ -5,27 +5,28 @@
     <title>Butterfly Message</title>
 </head>
 <style>
-    #customers {
+    .customers {
         font-family: Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
+        table-layout: fixed;
     }
 
-    #customers td,
-    #customers th {
+    .customers td,
+    .customers th {
         border: 1px solid #ddd;
         padding: 8px;
     }
 
-    #customers tr:nth-child(even) {
+    .customers tr:nth-child(even) {
         background-color: #f2f2f2;
     }
 
-    #customers tr:hover {
+    .customers tr:hover {
         background-color: #ddd;
     }
 
-    #customers th {
+    .customers th {
         padding-top: 12px;
         padding-bottom: 12px;
         text-align: left;
@@ -33,29 +34,34 @@
         color: black;
     }
 
-    #customers tfoot {
+    .customers tfoot {
         padding-top: 12px;
         padding-bottom: 12px;
         text-align: left;
         background-color: #D9D9D9;
         color: black;
+        font-weight: bold;
     }
 
-.number {
-    text-align: right;
-}
+    .number {
+        text-align: right;
+    }
 
-.text {
-    text-align: center;
-}
+    .text {
+        text-align: center;
+    }
 </style>
 
 <body>
     <h1 style="text-align:center">Komisi & Gaji Terapis</h1>
     <p style="text-align:center">{{HelperCustom::formatDate(@$tanggal_awal) }} s/d {{ HelperCustom::formatDate(@$tanggal_akhir) }}</p>
 
+    @php $grand_total_sesi = 0 @endphp
+    @php $grand_total_fee_sesi = 0 @endphp
+    @php $grand_total_komisi_terapis = 0 @endphp
+    @php $grand_total = 0 @endphp
     @foreach($data as $key => $obj)
-    <table id="customers">
+    <table class="customers">
         <thead>
             <tr>
                 <th>No</th>
@@ -76,9 +82,9 @@
             @foreach($obj as $key => $value)
             <tr>
                 @php $total_sesi = $total_sesi + $value['sesi'] @endphp
-                @php $total_fee_sesi = $total_fee_sesi  + $value['fee_sesi'] @endphp
-                @php $total_komisi_terapis = $total_komisi_terapis  + $value['komisi_terapis'] @endphp
-                @php $total = $total  + $value['total'] @endphp
+                @php $total_fee_sesi = $total_fee_sesi + $value['fee_sesi'] @endphp
+                @php $total_komisi_terapis = $total_komisi_terapis + $value['komisi_terapis'] @endphp
+                @php $total = $total + $value['total'] @endphp
                 <td class="text">{{ $loop->index + 1 }}</td>
                 <td class="text">{{ $value['code'] }}</td>
                 <td class="text">{{ $value['nama'] }}</td>
@@ -96,10 +102,29 @@
             <td class="number">@convert($total_fee_sesi)</td>
             <td class="number">@convert($total_komisi_terapis)</td>
             <td class="number">@convert($total)</td>
+            @php $grand_total_sesi = $grand_total_sesi + $total_sesi @endphp
+            @php $grand_total_fee_sesi = $grand_total_fee_sesi + $total_fee_sesi @endphp
+            @php $grand_total_komisi_terapis = $grand_total_komisi_terapis + $total_komisi_terapis @endphp
+            @php $grand_total = $grand_total + $total @endphp
         </tfoot>
     </table>
     <br>
     @endforeach
-</body>
 
+    <table class="customers">
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    Total
+                </td>
+                <td class="text"> @convert($grand_total_sesi) </td>
+                <td class="number">@convert($grand_total_fee_sesi)</td>
+                <td class="number">@convert($grand_total_komisi_terapis)</td>
+                <td class="number">@convert($grand_total)</td>
+            </tr>
+        </tfoot>
+    </table>
+
+
+</body>
 </html>
