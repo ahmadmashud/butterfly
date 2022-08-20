@@ -240,14 +240,21 @@ Route::controller(LaporanController::class)->group(function () {
     Route::get("/laporan/transaction/{id}/pdf", "generate_receipt")->middleware(OnlyMemberMiddleware::class);
     // MENU FND
     Route::get("/laporan/fnd", "view_fnd")->middleware(OnlyMemberMiddleware::class);
-    // DOWNLOAD LAPORAN
-    Route::get("/laporan/download", "download_laporan")->middleware(OnlyMemberMiddleware::class);
+    // DOWNLOAD LAPORAN EXCEL
+    Route::get("/laporan/print/excel", "print_laporan_excel")->middleware(OnlyMemberMiddleware::class);
+    // DOWNLOAD LAPORAN PDF
+    Route::get("/laporan/print/pdf", "print_laporan_pdf")->middleware(OnlyMemberMiddleware::class);
+
     // DOWNLOAD LAPORAN FND
-    Route::get("/laporan/download/fnd", "download_laporan_fnd")->middleware(OnlyMemberMiddleware::class);
+    Route::get("/laporan/print/fnd/excel", "print_laporan_fnd_excel")->middleware(OnlyMemberMiddleware::class);
+    // PRINT LAPORAN FND PDF
+    Route::get("/laporan/print/fnd/pdf", "print_laporan_fnd_pdf")->middleware(OnlyMemberMiddleware::class);
 
     Route::get("/laporan/products", "view_product")->middleware(OnlyMemberMiddleware::class);
-    // DOWNLOAD LAPORAN PRODUK
-    Route::get("/laporan/download/products", "download_laporan_products")->middleware(OnlyMemberMiddleware::class);
+    // PRINT LAPORAN PRODUK EXCEL
+    Route::get("/laporan/print/products/excel", "print_laporan_products_excel")->middleware(OnlyMemberMiddleware::class);
+    // PRINT LAPORAN PRODUK PDF
+    Route::get("/laporan/print/products/pdf", "print_laporan_products_pdf")->middleware(OnlyMemberMiddleware::class);
 
     // MENU R
     Route::get("/laporan/r", "r")->middleware(OnlyMemberMiddleware::class);
@@ -264,6 +271,12 @@ Route::controller(KomisiGajiController::class)->group(function () {
     Route::get("/komisi_gaji/terapis", "view_terapis")->middleware(OnlyMemberMiddleware::class);
     // TERAPIS DETAIL
     Route::get("/komisi_gaji/terapis/{id}", "view_terapis_detail")->middleware(OnlyMemberMiddleware::class);
-    // MENU FND
+    // MENU 
     Route::get("/komisi_gaji/supplier", "view_supplier")->middleware(OnlyMemberMiddleware::class);
+    // DOWNLOAD LAPORAN
+    Route::get("/komisi_gaji/terapis/print/rekap", "print_rekap_terapis")->middleware(OnlyMemberMiddleware::class);
+    Route::get("/komisi_gaji/user/print/rekap", "print_rekap_user")->middleware(OnlyMemberMiddleware::class);
+    Route::get("/komisi_gaji/supplier/print/rekap", "print_supplier")->middleware(OnlyMemberMiddleware::class);
 });
+
+

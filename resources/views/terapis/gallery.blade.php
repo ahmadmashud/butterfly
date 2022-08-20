@@ -6,9 +6,33 @@
 
 @section('content')
 <style>
-  table td, th {
-    background-color: unset;
-}
+    table td,
+    th {
+        background-color: unset;
+    }
+
+    div.gallery {
+        font-weight: bold;
+        margin: 0;
+        border: 1px solid #ccc;
+        float: left;
+        width: 140px;
+        text-align: center;
+    }
+
+    div.gallery:hover {
+        border: 1px solid #777;
+    }
+
+    div.gallery img {
+        width: 100%;
+        height: auto;
+    }
+
+    div.desc {
+        padding: 0;
+        text-align: center;
+    }
 </style>
 
 <div class="background-gray" style="position: fixed;width: 85%;border: 1px solid gray;">
@@ -40,7 +64,7 @@
 </div>
 <br>
 <div class="page-heading">
-    <h1 class="page-title text-center">{{$title}}</h1>
+    <h1 class="page-title text-center"></h1>
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
             <a href="index.html"><i class="la la-home font-20"></i></a>
@@ -49,26 +73,22 @@
 </div>
 <div class="page-content fade-in-up" style="padding: 10px;">
     <div class="row d-flex justify-content-left">
+
         @foreach($data as $key => $value)
-        <div class="col-sm-2 col-md-2 col-3" style="padding-right: 0px;padding-left: 0px;">
-            <table border="1">
-                <tr>
-                    <th colspan="2">
-                        <a href="galeri_detail.php">
-                            <img class="img-fluid img-thumbnail" src="{{ asset('storage'.config('constants.file_folder_terapis').'/'.$value->foto) }}" style="width: 250px;height: 250px;padding: 0px;">
-                    </th>
-                </tr>
-                <tr style="background-color: {{ config('constants.status_terapis_color')[$value->status] }}">
-                    <th>
-                        <div data-code="{{ $value->code }}" data-id="{{ $value->id_trx }}" style="text-align: center;width: 21px;" data-status="{{ $value->status }}" data-countdown="{{$value->tanggal_keluar}}">
+        <div class="gallery">
+            <a target="_blank" href="img_5terre.jpg">
+                <img class="img-fluid img-thumbnail" src="{{ asset('storage'.config('constants.file_folder_terapis').'/'.$value->foto) }}" style="height: 230px;padding: 0px;">
+            </a>
+            <div class="desc" style="background-color: {{ config('constants.status_terapis_color')[$value->status] }}">
+                <div class="row">
+                    <div class="col-sm-6" data-code="{{ $value->code }}" data-id="{{ $value->id_trx }}" style="text-align: center;width: 21px" data-status="{{ $value->status }}" data-countdown="{{$value->tanggal_keluar}}">
                         {{$value->tanggal_keluar == null ? $value->code : ''}}
-                        </div>
-                    </th>
-                    <th style="text-align: center;font-size: 15px;">
+                    </div>
+                    <div class="col-sm-6" data-code="{{ $value->code }}" data-id="{{ $value->id_trx }}" style="text-align: center;width: 21px;border-left:1px solid black">
                         {{$value->nama}}
-                    </th>
-                </tr>
-            </table>
+                    </div>
+                </div>
+            </div>
         </div>
         @endforeach
     </div>

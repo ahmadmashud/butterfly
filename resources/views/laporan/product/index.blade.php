@@ -23,7 +23,8 @@
                 <br>
                 <div class="text-left">
                     <button class="btn btn-primary" type="submit">Cari</button>
-                    <button id="btnPrintProduct" class="btn btn-success" type="button">Print Excel</button>
+                    <button id="btnPrintProductExcel" class="btn btn-success" type="button">Print Excel</button>
+                    <button id="btnPrintProductPdf" class="btn btn-success" type="button">Print Pdf</button>
                     <a class="btn btn-secondary" href="/laporan/products">Reset</a>
                 </div>
             </form>

@@ -28,7 +28,6 @@ class LaporanFndExport implements FromCollection, WithHeadings, WithColumnWidths
             $no++;
             $data = [
                 'no' => $no,
-                'tanggal' => HelperCustom::formatDateTime($value->tanggal),
                 'nama' => $value->nama,
                 'price' =>  $value->price,
                 'qty' =>  $value->qty,
@@ -45,7 +44,6 @@ class LaporanFndExport implements FromCollection, WithHeadings, WithColumnWidths
         return [
             [
                 'No',
-                'Tanggal',
                 'Nama',
                 'Harga',
                 'Terjual',
@@ -62,8 +60,7 @@ class LaporanFndExport implements FromCollection, WithHeadings, WithColumnWidths
             'C' => 18,
             'D' => 10,
             'E' => 15,
-            'F' => 10,
-            'G' => 10
+            'F' => 10
         ];
     }
 
@@ -71,9 +68,8 @@ class LaporanFndExport implements FromCollection, WithHeadings, WithColumnWidths
     {
         $number_format = "#,##0";
         return [
-            'C' => NumberFormat::FORMAT_DATE_DATETIME,
-            'D' => $number_format,
-            'F' => $number_format,
+            'C' => $number_format,
+            'E' => $number_format,
         ];
     }
 
@@ -82,7 +78,7 @@ class LaporanFndExport implements FromCollection, WithHeadings, WithColumnWidths
         return [
             AfterSheet::class    => function (AfterSheet $event) {
 
-                $event->sheet->getDelegate()->getStyle('A1:G1')
+                $event->sheet->getDelegate()->getStyle('A1:F1')
                     ->getFont()
                     ->setBold(true);
             },

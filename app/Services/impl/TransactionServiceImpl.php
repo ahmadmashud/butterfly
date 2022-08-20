@@ -375,7 +375,7 @@ class TransactionServiceImpl implements TransactionService
 
     public function get(int $id)
     {
-        return  Transaction::with(['terapis', 'room', 'loker', 'produk', 'paket'])->where('id', $id)->firstOrFail();
+        return  Transaction::with(['terapis', 'room', 'loker', 'produk', 'paket','sales'])->where('id', $id)->firstOrFail();
     }
 
     public function delete(int $id)

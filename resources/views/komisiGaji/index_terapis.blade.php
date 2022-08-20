@@ -11,8 +11,23 @@
     </ol>
 </div>
 <div class="page-content fade-in-up">
+
     <div class="ibox">
         <div class="ibox-body">
+            <form id="formFilter" action="/komisi_gaji/terapis/print">
+                <div class="form-inline" style="font-size: 17px;">
+                    <label class="sr-only">Tanggal Awal</label>
+                    <input required name="tanggal_awal" class="form-control mb-2 mr-sm-2 mb-sm-0" type="date" placeholder="Tanggal awal" value="{{@$tanggal_awal}}">
+                    <label class="sr-only">Tanggal Akhir</label>
+                    <input required name="tanggal_akhir" class="form-control mb-2 mr-sm-2 mb-sm-0" type="date" placeholder="Tanggal akhir" value="{{@$tanggal_akhir}}">
+                </div>
+                <br>
+                <div class="text-left">
+                    <!-- <button class="btn btn-primary" type="submit">Cari</button> -->
+                    <button class="btn btn-success" id="bntPrint" type="button">Print</button>
+                    <a class="btn btn-secondary" href="/komisi_gaji/terapis/">Reset</a>
+                </div>
+            </form>
         </div>
     </div>
     <div class="ibox">

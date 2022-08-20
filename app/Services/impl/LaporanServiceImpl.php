@@ -34,10 +34,11 @@ class LaporanServiceImpl implements LaporanService
 
     function getFnd($tanggal_awal, $tanggal_akhir)
     {
-        return TransactionFoodDrink::with(['foodDrink', 'transaction'])
+        $data = TransactionFoodDrink::with(['foodDrink', 'transaction'])
             ->select(
+                'm_category_food_drinks.nama as category',
+                'm_food_drinks.code',
                 'm_food_drinks.nama',
-                't_transactions.tanggal',
                 'm_food_drinks.nama',
                 't_transaction_food_drinks.price',
                 DB::raw("SUM(t_transaction_food_drinks.qty) as qty"),
@@ -45,8 +46,11 @@ class LaporanServiceImpl implements LaporanService
             )
             ->join('t_transactions', 't_transactions.id', '=', 't_transaction_food_drinks.id_trx')
             ->join('m_food_drinks', 'm_food_drinks.id', '=', 't_transaction_food_drinks.id_food_drink')
+            ->join('m_category_food_drinks', 'm_category_food_drinks.id', '=', 'm_food_drinks.id_category_food_drink')
             ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
-            ->groupBy('nama', 'tanggal', 'price')->orderBy('tanggal', 'desc')->get();
+            ->groupBy('nama', 'price', 'category', 'code')->orderBy('tanggal', 'desc')->get();
+
+        return $data;
     }
 
     function getProducts($tanggal_awal, $tanggal_akhir)
@@ -65,6 +69,22 @@ class LaporanServiceImpl implements LaporanService
             ->join('m_products', 'm_products.id', '=', 't_transaction_products.id_produk')
             ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
             ->groupBy('trx_no', 'nama', 'tanggal', 'harga')->orderBy('tanggal', 'desc')->get();
+    }
+
+    function getProductsRekap($tanggal_awal, $tanggal_akhir)
+    {
+        return TransactionProduct::with(['product', 'transaction'])
+            ->select(
+                'm_products.code',
+                'm_products.nama',
+                't_transaction_products.harga',
+                DB::raw("SUM(t_transaction_products.qty) as qty"),
+                DB::raw("SUM(t_transaction_products.total) as total")
+            )
+            ->join('t_transactions', 't_transactions.id', '=', 't_transaction_products.id_trx')
+            ->join('m_products', 'm_products.id', '=', 't_transaction_products.id_produk')
+            ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
+            ->groupBy( 'code','nama', 'harga')->orderBy('tanggal', 'desc')->get();
     }
 
     function  choose(Request $request)

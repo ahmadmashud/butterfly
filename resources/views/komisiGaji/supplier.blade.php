@@ -13,7 +13,7 @@
 <div class="page-content fade-in-up">
     <div class="ibox">
         <div class="ibox-body">
-            <form action="/komisi_gaji/supplier">
+            <form id="formFilter" action="/komisi_gaji/supplier">
                 <div class="form-inline" style="font-size: 17px;">
                     <label class="sr-only">Tanggal Awal</label>
                     <input required name="tanggal_awal" class="form-control mb-2 mr-sm-2 mb-sm-0" type="date" placeholder="Tanggal awal" value="{{@$tanggal_awal}}">
@@ -22,9 +22,9 @@
                 </div>
                 <br>
                 <div class="text-left">
-                    <!-- <button class="btn btn-success" type="submit">Print Excel</button> -->
                     <a class="btn btn-secondary" href="/komisi_gaji/supplier">Reset</a>
                     <button class="btn btn-primary" type="submit">Cari</button>
+                    <button class="btn btn-success" id="bntPrint" type="button">Print</button>
                 </div>
             </form>
         </div>
@@ -53,13 +53,13 @@
                         <td>{{ HelperCustom::formatDate($value['tanggal']) }}</td>
                         <td>{{ $value['nama'] }}</td>
                         <td>{{ $value['sesi'] }}</td>
-                        <td>@convert($value['total'])</td>
+                        <td class="number">@convert($value['total'])</td>
                     </tr>
                     @endforeach
                 </tbody>
                 <tfoot>
                     <td colspan="4" class="text-center"><b>Total</b></td>
-                    <td><b>@convert($total)</b></td>
+                    <td class="number"><b>@convert($total)</b></td>
                 </tfoot>
             </table>
         </div>

@@ -8,6 +8,7 @@ use App\Services\TerapisService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class KomisiGajiController extends Controller
 {
@@ -31,10 +32,14 @@ class KomisiGajiController extends Controller
 
             return abort(401);
         }
+        $tanggal_awal =  date('Y-m-01');
+        $tanggal_akhir =  date('Y-m-t');
         $data = $this->userService->list();
         return response()
             ->view('komisiGaji.index_user', [
                 'data' =>   $data,
+                'tanggal_awal' => $tanggal_awal,
+                'tanggal_akhir' =>  $tanggal_akhir,
                 'title' => 'Komisi Pengguna'
             ]);
     }
@@ -66,11 +71,15 @@ class KomisiGajiController extends Controller
 
             return abort(401);
         }
+        $tanggal_awal =  date('Y-m-01');
+        $tanggal_akhir =  date('Y-m-t');
         $data = $this->terapisService->list();
         return response()
             ->view('komisiGaji.index_terapis', [
                 'data' =>   $data,
-                'title' => 'Komisi & Gaji Terapis'
+                'title' => 'Komisi & Gaji Terapis',
+                'tanggal_awal' => $tanggal_awal,
+                'tanggal_akhir' =>  $tanggal_akhir,
             ]);
     }
 
@@ -116,5 +125,59 @@ class KomisiGajiController extends Controller
                 'total' => $total,
                 'title' => 'Komisi Supplier'
             ]);
+    }
+
+    public function print_rekap_terapis(Request $request)
+    {
+        $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
+        $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
+        $data = $this->komisiGajiService->getRekapTerapis($tanggal_awal, $tanggal_akhir);
+        $data = [
+            'data' => $data,
+            'tanggal_awal' => $tanggal_awal,
+            'tanggal_akhir' =>  $tanggal_akhir
+
+        ];
+        $pdf = PDF::loadView('komisiGaji.print.terapis', $data);
+
+        return $pdf->stream('komisi terapis.pdf');
+    }
+
+
+    public function print_supplier(Request $request)
+    {
+        $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
+        $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
+        $data = $this->komisiGajiService->getSupplier($tanggal_awal, $tanggal_akhir);
+        $total = $data->map(function ($trx) {
+            return $trx['total'];
+        })->sum();
+
+        $data = [
+            'data' => $data,
+            'total' => $total,
+            'tanggal_awal' => $tanggal_awal,
+            'tanggal_akhir' =>  $tanggal_akhir
+
+        ];
+        $pdf = PDF::loadView('komisiGaji.print.supplier', $data);
+
+        return $pdf->stream('komisi Supplier.pdf');
+    }
+
+    public function print_rekap_user(Request $request)
+    {
+        $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
+        $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
+        $data = $this->komisiGajiService->getRekapUser($tanggal_awal, $tanggal_akhir);
+        $data = [
+            'data' => $data,
+            'tanggal_awal' => $tanggal_awal,
+            'tanggal_akhir' =>  $tanggal_akhir
+
+        ];
+        $pdf = PDF::loadView('komisiGaji.print.user', $data);
+
+        return $pdf->stream('komisi Produk Pengguna.pdf');
     }
 }

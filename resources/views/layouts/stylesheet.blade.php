@@ -66,5 +66,13 @@
         background-color: #010081;
         color:white;
     }
+
+.number {
+    text-align: right;
+}
+
+.text {
+    text-align: center;
+}
 </style>
 </style>

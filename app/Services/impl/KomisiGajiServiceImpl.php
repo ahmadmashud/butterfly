@@ -83,4 +83,49 @@ class KomisiGajiServiceImpl implements KomisiGajiService
             ];
         })->sortByDesc('tanggal');
     }
+
+    function getRekapTerapis($tanggal_awal, $tanggal_akhir)
+    {
+        $trx = KomisiTerapis::with(['terapis', 'transaction'])
+            ->select(
+                'm_terapis.code',
+                't_transactions.id_terapis',
+                'm_terapis.nama',
+                'm_package_rooms.nama as nama_paket',
+                DB::raw("SUM(t_komisi_terapis.sesi) as sesi"),
+                DB::raw("SUM(t_komisi_terapis.amount_km_paket * t_komisi_terapis.sesi) as fee_sesi"),
+                DB::raw("SUM(t_komisi_terapis.amount_km_produk) as komisi_terapis"),
+                DB::raw("SUM(t_komisi_terapis.amount_km_total) as total")
+            )
+            ->join('t_transactions', 't_transactions.id', '=', 't_komisi_terapis.id_trx')
+            ->join('m_terapis', 'm_terapis.id', '=', 't_komisi_terapis.id_terapis')
+            ->join('m_package_rooms', 'm_package_rooms.id', '=', 't_transactions.id_paket')
+            ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
+            ->groupBy('id_terapis', 'nama', 'nama_paket', 'code')->orderBy('code', 'asc')
+            ->get()
+            ->sortBy('code');
+
+    
+        // GROUPING
+        return $trx->groupBy('nama');
+    }
+
+    function getRekapUser($tanggal_awal, $tanggal_akhir)
+    {
+        return KomisiUser::with(['user', 'transaction'])
+            ->select(
+                't_komisi_users.id_user',
+                'm_users.nama',
+                'm_roles.nama as jabatan',
+                DB::raw("SUM(t_transaction_products.qty) as total_produk"),
+                DB::raw("SUM(t_komisi_users.amount_km_total) as fee_produk")
+            )
+            ->join('t_transactions', 't_transactions.id', '=', 't_komisi_users.id_trx')
+            ->join('t_transaction_products', 't_transactions.id', '=', 't_transaction_products.id_trx')
+            ->join('m_users', 'm_users.id', '=', 't_komisi_users.id_user')
+            ->join('m_roles', 'm_roles.id', '=', 'm_users.role_id')
+            ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
+            ->groupBy('id_user', 'nama', 'jabatan')->orderBy('tanggal', 'desc')
+            ->get();
+    }
 }

@@ -24,6 +24,7 @@
                 <div class="text-left">
                     <button class="btn btn-primary" type="submit">Cari</button>
                     <button id="btnPrintFnd" class="btn btn-success" type="button">Print Excel</button>
+                    <button id="btnPrintFndPdf" class="btn btn-success" type="button">Print Pdf</button>
                     <a class="btn btn-secondary" href="/laporan/fnd">Reset</a>
                 </div>
             </form>
@@ -40,7 +41,6 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Tanggal</th>
                         <th>Nama</th>
                         <th>Harga</th>
                         <th>Terjual</th>
@@ -51,7 +51,6 @@
                     @foreach($data as $key => $value)
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
-                        <td>{{ HelperCustom::formatDate($value['tanggal']) }}</td>
                         <td>{{ $value['nama'] }}</td>
                         <td>@convert($value['price'])</td>
                         <td>{{ $value['qty'] }}</td>

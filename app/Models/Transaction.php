@@ -51,4 +51,10 @@ class Transaction extends Model
     {
         return $this->hasMany(TransactionProduct::class, 'id_trx', 'id');
     }
+    
+
+    public function sales()
+    {
+        return $this->hasOne(User::class, 'id', 'id_sales');
+    }
 }
