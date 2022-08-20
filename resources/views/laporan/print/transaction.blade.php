@@ -102,36 +102,36 @@
     <br>
     <table  id="customers" border="1" style="width: 60%;">
         <tr class="title">
-            <th> <label>Total Cash : </label></th>
+            <th> <label>Total Cash</label></th>
             <td>@convert($total_cash) </td>
 
-            <th> <label>Room Charge : </label></th>
+            <th> <label>Room Charge</label></th>
             <td>@convert($total_room) </td>
 
-            <th> <label>Diskon : </label></th>
+            <th> <label>Diskon</label></th>
             <td>@convert($total_diskon) </td>
             
-            <th> <label>Fee Terapis : </label></th>
+            <th> <label>Fee Terapis</label></th>
             <td>@convert($total_fee_terapis) </td>
         </tr>
         <tr class="title">
-            <th> <label>Total Credit : </label></th>
+            <th> <label>Total Credit</label></th>
             <td>@convert($total_credit) </td>
 
-            <th> <label>Menu Charge : </label></th>
+            <th> <label>Menu Charge</label></th>
             <td>@convert($total_fnd) </td>
 
-            <th> <label>Tax : </label></th>
+            <th> <label>Tax</label></th>
             <td>@convert($total_tax) </td>
         </tr>
         <tr class="title">
-            <th> <label>Total Foc : </label></th>
+            <th> <label>Total Foc</label></th>
             <td>@convert($total_foc) </td>
 
-            <th> <label>Aroma Therapy : </label></th>
+            <th> <label>Aroma Therapy</label></th>
             <td>@convert($total_harga_produk) </td>
 
-            <th> <label>Service : </label></th>
+            <th> <label>Service</label></th>
             <td>@convert($total_service) </td>
         </tr>
     </table>
