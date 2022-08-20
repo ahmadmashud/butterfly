@@ -58,7 +58,6 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th>Tanggal</th>
                 <th>Nama</th>
                 <th>Jabatan</th>
                 <th>Total Produk</th>
@@ -72,7 +71,6 @@
                 @php $total = $total + $value['fee_produk'] @endphp
 
                 <td class="text">{{ $loop->index + 1 }}</td>
-                <td class="text">{{ HelperCustom::formatDate($value['tanggal']) }}</td>
                 <td class="text">{{ $value['nama'] }}</td>
                 <td class="text">{{ $value['jabatan'] }}</td>
                 <td class="text">{{ $value['total_produk'] }}</td>
@@ -81,7 +79,7 @@
             @endforeach
         </tbody>
         <tfoot>
-            <td style="background-color: unset;border:none" class="text" colspan="5"></td>
+            <td style="background-color: unset;border:none" class="text" colspan="4"></td>
             <td class="number">@convert($total)</td>
         </tfoot>
     </table>
