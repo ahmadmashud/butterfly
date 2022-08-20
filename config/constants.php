@@ -15,7 +15,7 @@ return [
         'FINISHING'=> 'aqua',
         'RESTING'=> 'blue',
         'BOOK'=> 'yellow',
-        'OFF'=> 'none'
+        'OFF'=> 'white'
     ],
     'metode_pembayaran'=> [
         'CASH'=> 'Cash',
