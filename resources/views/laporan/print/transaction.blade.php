@@ -76,7 +76,7 @@
                 <th>Diskon</th>
                 <th>Total</th>
                 <th>Jenis Pembayaran</th>
-                <th>Kasir</th>
+                <!-- <th>Kasir</th> -->
             </tr>
         </thead>
         <tbody>
@@ -94,7 +94,7 @@
                 <td>@convert($value->amount_total_discount)</td>
                 <td>@convert($value->amount_grand_total)</td>
                 <td>{{ $value->payment != null ? config('constants.metode_pembayaran')[$value->payment->metode_pembayaran] : '-'}}</td>
-                <td>{{ $value->sales->nama }}</td>
+                <!-- <td>{{ $value->sales->nama }}</td> -->
             </tr>
             @endforeach
         </tbody>
