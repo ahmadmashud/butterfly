@@ -67,6 +67,7 @@ class LaporanServiceImpl implements LaporanService
             )
             ->join('t_transactions', 't_transactions.id', '=', 't_transaction_products.id_trx')
             ->join('m_products', 'm_products.id', '=', 't_transaction_products.id_produk')
+            ->where('t_transactions.status', 'PAID')
             ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
             ->groupBy('trx_no', 'nama', 'tanggal', 'harga')->orderBy('tanggal', 'desc')->get();
     }
@@ -83,6 +84,7 @@ class LaporanServiceImpl implements LaporanService
             )
             ->join('t_transactions', 't_transactions.id', '=', 't_transaction_products.id_trx')
             ->join('m_products', 'm_products.id', '=', 't_transaction_products.id_produk')
+            ->where('t_transactions.status', 'PAID')
             ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
             ->groupBy( 'code','nama', 'harga')->orderBy('tanggal', 'desc')->get();
     }

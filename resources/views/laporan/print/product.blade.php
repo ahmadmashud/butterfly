@@ -58,7 +58,7 @@
     <table id="customers">
         <thead>
             <tr>
-                <th >No</th>
+                <th>No</th>
                 <th>ID</th>
                 <th>Produk</th>
                 <th>Harga</th>
@@ -68,9 +68,11 @@
         </thead>
         <tbody>
             @php $total = 0 @endphp
+            @php $total_qty = 0 @endphp
             @foreach($data as $key => $value)
             <tr>
                 @php $total = $total + $value['total'] @endphp
+                @php $total_qty = $total_qty + $value['qty'] @endphp
                 <td class="text">{{ $loop->index + 1 }}</td>
                 <td class="text">{{ $value['code'] }}</td>
                 <td class="text">{{ $value['nama'] }}</td>
@@ -81,7 +83,8 @@
             @endforeach
         </tbody>
         <tfoot>
-            <td style="background-color: unset;border:none" class="text" colspan="5"></td>
+            <td style="background-color: unset;border:none" class="text" colspan="4"></td>
+            <td class="text">{{ $total_qty }}</td>
             <td class="number">@convert($total)</td>
         </tfoot>
     </table>
