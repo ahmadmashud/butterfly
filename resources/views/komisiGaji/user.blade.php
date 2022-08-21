@@ -44,7 +44,6 @@
                         <th>Tanggal</th>
                         <th>Nama</th>
                         <th>Jabatan</th>
-                        <th>Total Produk</th>
                         <th>Fee Produk</th>
                     </tr>
                 </thead>
@@ -55,13 +54,12 @@
                         <td>{{ HelperCustom::formatDate($value['tanggal']) }}</td>
                         <td>{{ $value['nama'] }}</td>
                         <td>{{ $value['jabatan'] }}</td>
-                        <td>{{ $value['total_produk'] }}</td>
                         <td>@convert($value['fee_produk'])</td>
                     </tr>
                     @endforeach
                 </tbody>
                 <tfoot>
-                    <td colspan="5" class="text-center"><b>Total</b></td>
+                    <td colspan="4" class="text-center"><b>Total</b></td>
                     <td><b>@convert($total)</b></td>
                 </tfoot>
             </table>

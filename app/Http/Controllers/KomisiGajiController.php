@@ -114,6 +114,7 @@ class KomisiGajiController extends Controller
         $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
 
         $data = $this->komisiGajiService->getSupplier($tanggal_awal, $tanggal_akhir);
+        dd($data);
         $total = $data->map(function ($trx) {
             return $trx['total'];
         })->sum();

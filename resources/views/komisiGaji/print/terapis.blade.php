@@ -70,7 +70,7 @@
                 <th>Paket</th>
                 <th>Total Sesi</th>
                 <th>Fee Sesi</th>
-                <th>Komisi Terapis</th>
+                <th>Komisi Produk</th>
                 <th>Total</th>
             </tr>
         </thead>

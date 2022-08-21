@@ -18,11 +18,9 @@ class KomisiGajiServiceImpl implements KomisiGajiService
                 't_komisi_users.id_user',
                 'm_users.nama',
                 'm_roles.nama as jabatan',
-                DB::raw("SUM(t_transaction_products.qty) as total_produk"),
                 DB::raw("SUM(t_komisi_users.amount_km_total) as fee_produk")
             )
             ->join('t_transactions', 't_transactions.id', '=', 't_komisi_users.id_trx')
-            ->join('t_transaction_products', 't_transactions.id', '=', 't_transaction_products.id_trx')
             ->join('m_users', 'm_users.id', '=', 't_komisi_users.id_user')
             ->join('m_roles', 'm_roles.id', '=', 'm_users.role_id')
             ->where('m_users.id', $id)
@@ -105,27 +103,67 @@ class KomisiGajiServiceImpl implements KomisiGajiService
             ->get()
             ->sortBy('code');
 
-    
+
         // GROUPING
         return $trx->groupBy('nama');
     }
 
     function getRekapUser($tanggal_awal, $tanggal_akhir)
     {
-        return KomisiUser::with(['user', 'transaction'])
-            ->select(
-                't_komisi_users.id_user',
-                'm_users.nama',
-                'm_roles.nama as jabatan',
-                DB::raw("SUM(t_transaction_products.qty) as total_produk"),
-                DB::raw("SUM(t_komisi_users.amount_km_total) as fee_produk")
-            )
-            ->join('t_transactions', 't_transactions.id', '=', 't_komisi_users.id_trx')
-            ->join('t_transaction_products', 't_transactions.id', '=', 't_transaction_products.id_trx')
-            ->join('m_users', 'm_users.id', '=', 't_komisi_users.id_user')
-            ->join('m_roles', 'm_roles.id', '=', 'm_users.role_id')
-            ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
-            ->groupBy('id_user', 'nama', 'jabatan')->orderBy('tanggal', 'desc')
-            ->get();
+
+        $data = DB::select(DB::raw("select
+        mu.code,
+        mu.nama as sales,
+        ttp.qty ,
+        sum(case
+            when mr.code = 'SPV' then tku.amount_km_total
+        end) as manager ,
+        sum(case
+            when mr.code = 'GRO' then tku.amount_km_total
+        end) as gro ,
+        sum(case
+            when mr.code = 'STAFF' then tku.amount_km_total
+        end) as staff
+    from
+        t_transactions tt
+    inner join t_komisi_users tku on
+        tt.id = tku.id_trx
+    left join m_users mu on
+        tt.id_sales = mu.id
+    left join m_roles mr on
+        mr.id = tku.role_id
+    inner join (
+        select
+            sum(qty) as qty,
+            id_trx
+        from
+            t_transaction_products ttp
+            inner join 
+            t_transactions tt on
+            ttp.id_trx  = tt.id 
+            where tanggal between '$tanggal_awal' and '$tanggal_akhir'
+        group by
+            id_trx) ttp
+    on
+        ttp.id_trx = tt.id
+    where tanggal between '$tanggal_awal' and '$tanggal_akhir'
+    group by
+        code,
+        sales,
+        qty;"));
+
+        $data_groups = collect($data)->groupBy('sales');
+        
+        return $data_groups->map(function ($group) {
+            return [
+                'code' => $group->first()->code,
+                'sales' => $group->first()->sales,
+                'qty' => $group->sum('qty'),
+                'manager' => $group->sum('manager'),
+                'gro' => $group->sum('gro'),
+                'staff' => $group->sum('staff')
+            ];
+        })->sortBy('code');
+
     }
 }

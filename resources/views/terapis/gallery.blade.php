@@ -12,11 +12,12 @@
     }
 
     div.gallery {
+        font-size: 11px;
         font-weight: bold;
         margin: 0;
         border: 1px solid #ccc;
         float: left;
-        width: 140px;
+        width: 100px;
         text-align: center;
     }
 
@@ -77,7 +78,7 @@
         @foreach($data as $key => $value)
         <div class="gallery">
             <a target="_blank" href="img_5terre.jpg">
-                <img class="img-fluid img-thumbnail" src="{{ asset('storage'.config('constants.file_folder_terapis').'/'.$value->foto) }}" style="height: 230px;padding: 0px;">
+                <img class="img-fluid img-thumbnail" src="{{ asset('storage'.config('constants.file_folder_terapis').'/'.$value->foto) }}" style="height: 150px;padding: 0px;">
             </a>
             <div class="desc" style="background-color: {{ config('constants.status_terapis_color')[$value->status] }}">
                 <div class="row">

@@ -177,7 +177,7 @@ class TransactionServiceImpl implements TransactionService
             $payment['amount_total'] = $payment['amount_cash'] + $payment['amount_credit'];
             $payment =  Payment::create($payment);
             //calculate KOMISI
-            if ($request->metode_pembayaran != 'CANCEL') {
+            if ($request->metode_pembayaran != 'CANCEL' && $transaction['amount_harga_produk']  > 0) {
                 $this->generateKomisiTerapis($transaction);
                 $this->generateKomisiSupplier($transaction);
                 $this->generateKomisiSales($transaction);
