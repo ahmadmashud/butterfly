@@ -16,7 +16,7 @@
             <div class="page-brand" style="background-color: #1600a1;">
                 <a class="link" href="/">
                     <span class="brand">
-                        <span class="brand-tip">Butterfly Message</span>
+                        <span class="brand-tip">Butterfly Massage</span>
                     </span>
                     <span class="brand-mini">BM</span>
                 </a>
