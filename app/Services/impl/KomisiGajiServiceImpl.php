@@ -112,48 +112,68 @@ class KomisiGajiServiceImpl implements KomisiGajiService
     {
 
         $data = DB::select(DB::raw("select
-        mu.code,
-        mu.nama as sales,
-        ttp.qty ,
-        sum(case
-            when mr.code = 'SPV' then tku.amount_km_total
-        end) as manager ,
-        sum(case
-            when mr.code = 'GRO' then tku.amount_km_total
-        end) as gro ,
-        sum(case
-            when mr.code = 'STAFF' then tku.amount_km_total
-        end) as staff
-    from
-        t_transactions tt
-    inner join t_komisi_users tku on
-        tt.id = tku.id_trx
-    left join m_users mu on
-        tt.id_sales = mu.id
-    left join m_roles mr on
-        mr.id = tku.role_id
-    inner join (
-        select
-            sum(qty) as qty,
-            id_trx
-        from
-            t_transaction_products ttp
-            inner join 
-            t_transactions tt on
-            ttp.id_trx  = tt.id 
-            where tanggal between '$tanggal_awal' and '$tanggal_akhir'
-        group by
-            id_trx) ttp
-    on
-        ttp.id_trx = tt.id
-    where tanggal between '$tanggal_awal' and '$tanggal_akhir'
-    group by
         code,
         sales,
-        qty;"));
+        sum(manager) as manager,
+        sum(staff) as staff,
+        sum(gro) as gro,
+        sum(qty)as qty
+    from
+        (
+        select
+            aa.*,
+            ttp.qty
+        from
+            (
+            select
+                mu.code,
+                mu.nama as sales,
+                sum(case
+                when mr.code = 'SPV' then tku.amount_km_total
+            end) as manager ,
+                sum(case
+                when mr.code = 'GRO' then tku.amount_km_total
+            end) as gro ,
+                sum(case
+                when mr.code = 'STAFF' then tku.amount_km_total
+            end) as staff,
+                tt.id
+            from
+                t_transactions tt
+            inner join t_komisi_users tku on
+                tt.id = tku.id_trx
+            left join m_users mu on
+                tt.id_sales = mu.id
+            left join m_roles mr on
+                mr.id = tku.role_id
+            where
+                tanggal between '$tanggal_awal' and '$tanggal_akhir'
+            group by
+                code,
+                sales,
+                id) aa
+        inner join 
+            (
+            select
+                sum(qty) as qty,
+                id_trx
+            from
+                t_transaction_products ttp
+            inner join t_transactions tt
+            on
+                tt.id = ttp.id_trx
+            where
+                tt.tanggal between '$tanggal_awal' and '$tanggal_akhir'
+            group by
+                ttp.id_trx)
+            ttp on
+            ttp.id_trx = aa.id ) trx
+    group by
+        code,
+        sales;"));
 
         $data_groups = collect($data)->groupBy('sales');
-        
+
         return $data_groups->map(function ($group) {
             return [
                 'code' => $group->first()->code,
@@ -164,6 +184,5 @@ class KomisiGajiServiceImpl implements KomisiGajiService
                 'staff' => $group->sum('staff')
             ];
         })->sortBy('code');
-
     }
 }
