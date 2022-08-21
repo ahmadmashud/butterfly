@@ -15,6 +15,11 @@ $("#form").each(function () {
         },
         submitHandler: function (form) {
             // $('#loading').show();
+            var grand_total = accounting.unformat($('[name=grand_total]').val());
+            if (grand_total == 0) {
+                alert('Grand Total Tidak valid (0), coba ubah2 paket untuk memastikan total terkalkulasi atau refresh halaman');
+                return;
+            }
             submit();
         }
     });
