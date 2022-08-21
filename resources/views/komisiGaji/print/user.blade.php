@@ -42,13 +42,13 @@
         font-weight: bold;
     }
 
-.number {
-    text-align: right;
-}
+    .number {
+        text-align: right;
+    }
 
-.text {
-    text-align: center;
-}
+    .text {
+        text-align: center;
+    }
 </style>
 
 <body>
@@ -68,11 +68,13 @@
             </tr>
         </thead>
         <tbody>
-            @php $total_gro = 0 @endphp
+            @php $total_qty = 0 @endphp
+            @php $total_gro = 0 @endphphp
             @php $total_manager = 0 @endphp
             @php $total_staff = 0 @endphp
             @foreach($data as $key => $value)
             <tr>
+                @php $total_qty = $total_qty + $value['qty'] @endphp
                 @php $total_gro = $total_gro + $value['gro'] @endphp
                 @php $total_manager = $total_manager + $value['manager'] @endphp
                 @php $total_staff = $total_staff + $value['staff'] @endphp
@@ -88,7 +90,8 @@
             @endforeach
         </tbody>
         <tfoot>
-            <td style="background-color: unset;border:none" class="text" colspan="4"></td>
+            <td style="background-color: unset;border:none" class="text" colspan="3"></td>
+            <td class="text">{{$total_qty}}</td>
             <td class="number">@convert($total_gro)</td>
             <td class="number">@convert($total_manager)</td>
             <td class="number">@convert($total_staff)</td>
