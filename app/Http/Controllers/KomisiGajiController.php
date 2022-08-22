@@ -26,15 +26,15 @@ class KomisiGajiController extends Controller
         $this->userService = $userService;
         $this->terapisService = $terapisService;
     }
-    public function view_user(): Response
+    public function view_user(Request $request): Response
     {
         if (HelperCustom::isValidAccess('KM_USER')) {
 
             return abort(401);
         }
-        $tanggal_awal =  date('Y-m-01');
-        $tanggal_akhir =  date('Y-m-t');
-        $data = $this->userService->list();
+        $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
+        $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
+        $data = $this->komisiGajiService->getRekapUser($tanggal_awal, $tanggal_akhir);
         return response()
             ->view('komisiGaji.index_user', [
                 'data' =>   $data,
@@ -114,7 +114,6 @@ class KomisiGajiController extends Controller
         $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
 
         $data = $this->komisiGajiService->getSupplier($tanggal_awal, $tanggal_akhir);
-        dd($data);
         $total = $data->map(function ($trx) {
             return $trx['total'];
         })->sum();

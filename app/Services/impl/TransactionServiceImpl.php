@@ -180,8 +180,7 @@ class TransactionServiceImpl implements TransactionService
             if ($request->metode_pembayaran != 'CANCEL' && $transaction['amount_harga_produk']  > 0) {
                 $this->generateKomisiTerapis($transaction);
                 $this->generateKomisiSupplier($transaction);
-                $this->generateKomisiSales($transaction);
-                $this->generateKomisiUser($transaction);
+                // $this->generateKomisiUser($transaction); manual select
             }
             DB::commit();
         } catch (\Exception $e) {
@@ -216,54 +215,29 @@ class TransactionServiceImpl implements TransactionService
         KomisiSupplier::create($komisi);
     }
 
-    function generateKomisiSales(Transaction $transaction)
-    {
-        // komisi produk sales/gro
-        $komisi_produk = $transaction->product_trx->sum(function ($item) {
-            return $item->product->km_gro * $item->qty;
-        });
+    // manual select
+    // function generateKomisiUser(Transaction $transaction)
+    // {
+    //     // komisi produk sales/gro
+    //     $komisi_produk_gro = $transaction->product_trx->sum(function ($item) {
+    //         return $item->product->km_gro * $item->qty;
+    //     });
 
-        $user = User::where('id', $transaction->id_sales)->firstOrFail();
-        $komisi['id_trx'] = $transaction->id;
-        $komisi['id_user'] = $transaction->id_sales;
-        $komisi['role_id'] = $user->role_id;
-        $komisi['amount_km_produk'] = $komisi_produk;
-        $komisi['amount_km_total'] = $komisi['amount_km_produk'];
-        KomisiUser::create($komisi);
-    }
+    //     // komisi user sTaff
+    //     $komisi_produk_staff = $transaction->product_trx->sum(function ($item) {
+    //         return $item->product->km_staff * $item->qty;
+    //     });
+    //     // komisi user spv
+    //     $komisi_produk_spv = $transaction->product_trx->sum(function ($item) {
+    //         return $item->product->km_spv * $item->qty;
+    //     });
 
-    function generateKomisiUser(Transaction $transaction)
-    {
-        // get users except GRO, cz GRO get comision if selected in menu trx
-        $users = User::with(['role'])->where('is_active', true)->get()
-            ->filter(function ($user) {
-                return $user->role->code != 'GRO';
-            });
-
-        // komisi user sTaff
-        $komisi_produk_staff = $transaction->product_trx->sum(function ($item) {
-            return $item->product->km_staff * $item->qty;
-        });
-        // komisi user spv
-        $komisi_produk_spv = $transaction->product_trx->sum(function ($item) {
-            return $item->product->km_spv * $item->qty;
-        });
-
-        $users->each(function ($user) use ($transaction, $komisi_produk_spv, $komisi_produk_staff) {
-            $komisi['id_trx'] = $transaction->id;
-            $komisi['id_user'] = $user->id;
-            $komisi['role_id'] = $user->role_id;
-            $komisi_amount = 0;
-            if ($user->role->code == 'STAFF') {
-                $komisi_amount  = $komisi_produk_staff;
-            } else if ($user->role->code == 'SPV') {
-                $komisi_amount  = $komisi_produk_spv;
-            }
-            $komisi['amount_km_produk'] = $komisi_amount;
-            $komisi['amount_km_total'] = $komisi['amount_km_produk'];
-            KomisiUser::create($komisi);
-        });
-    }
+    //     $komisi['id_trx'] = $transaction->id;
+    //     $komisi['amount_km_gro'] =  $komisi_produk_gro;
+    //     $komisi['amount_km_spv'] = $komisi_produk_spv;
+    //     $komisi['amount_km_staff'] = $komisi_produk_staff;
+    //     KomisiUser::create($komisi);
+    // }
 
     function toModelProductTrx(Request $request, $id)
     {
@@ -375,7 +349,7 @@ class TransactionServiceImpl implements TransactionService
 
     public function get(int $id)
     {
-        return  Transaction::with(['terapis', 'room', 'loker', 'produk', 'paket','sales'])->where('id', $id)->firstOrFail();
+        return  Transaction::with(['terapis', 'room', 'loker', 'produk', 'paket', 'sales'])->where('id', $id)->firstOrFail();
     }
 
     public function delete(int $id)
