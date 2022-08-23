@@ -367,7 +367,6 @@ class TransactionServiceImpl implements TransactionService
             $transaction =  $this->toEditTrx($request, $id);
             $transaction->save();
 
-
             // edit trx product
             $this->handlingEditProduct($request, $id);
 
@@ -375,6 +374,10 @@ class TransactionServiceImpl implements TransactionService
             $this->handlingEditFnd($request, $id);
 
             // update flag in terapis if change
+
+            $totalDuration = Carbon::parse($transaction->tanggal_masuk)->diffInSeconds(Carbon::parse($transaction->tanggal_keluar));
+            $status = gmdate('H:i:s', $totalDuration) <= '00:10:00' ? 'FINISHING'  : 'PROGRESING';
+
             $id_terapis_old =  $transaction['id_terapis'];
             $id_terapis_new =  $request->terapis;
             if ($id_terapis_new != $id_terapis_old) {
@@ -382,10 +385,16 @@ class TransactionServiceImpl implements TransactionService
                 $terapis_old->status = 'AVAILABLE';
                 $terapis_old->save();
 
+
                 $terapis_new = Terapis::where('id', $id_terapis_new)->firstOrFail();
-                $terapis_new->status = 'BOOK';
+                $terapis_new->status =  $status;
                 $terapis_new->save();
+            } else {
+                $terapis = Terapis::where('id', $id_terapis_old)->firstOrFail();
+                $terapis->status = $status;
+                $terapis->save();
             }
+
 
             // update flag in room if change
             $id_room_old =  $transaction['id_room'];
