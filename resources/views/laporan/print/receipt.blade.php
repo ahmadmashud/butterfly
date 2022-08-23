@@ -222,13 +222,13 @@
         <tr>
             <td></td>
             <td>Aroma Therapy</td>
-            <td>0</td>
+            <td class="number">0</td>
             <td></td>
         </tr>
         <tr>
             <td></td>
             <td>Member Disc</td>
-            <td>0</td>
+            <td class="number">0</td>
             <td></td>
         </tr>
         <tr>
