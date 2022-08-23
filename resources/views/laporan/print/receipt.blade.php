@@ -140,7 +140,7 @@
         @foreach($data->fnd as $key => $value)
         <tr>
             <td>{{ $value->foodDrink->nama }}</td>
-            <td class="number">@convert( $value->price)</td>
+            <td>@convert( $value->price)</td>
             <td>{{ $value->qty }}</td>
             <td class="number">@convert( $value->total )</td>
         </tr>
@@ -185,7 +185,7 @@
         @foreach($data->product_trx as $key => $value)
         <tr>
             <td>{{ $value->product->nama }}</td>
-            <td class="number">@convert( $value->harga)</td>
+            <td >@convert( $value->harga)</td>
             <td>{{ $value->qty }}</td>
             <td class="number">@convert( $value->total )</td>
         </tr>
