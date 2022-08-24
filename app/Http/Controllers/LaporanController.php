@@ -263,7 +263,7 @@ class LaporanController extends Controller
         $data = [
             'data' => $transaction
         ];
-        $customPaper = array(0, 0, 567.00, 283.80);
+        $customPaper = array(0, 0, 967.00, 283.80);
         $pdf = PDF::loadView('laporan.print.receipt', $data)->setPaper($customPaper, 'landscape');;
 
         return $pdf->stream('testing.pdf');

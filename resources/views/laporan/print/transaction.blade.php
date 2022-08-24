@@ -105,6 +105,9 @@
         <tr class="title">
             <th> <label>Total Cash</label></th>
             <td>@convert($total_cash) </td>
+            
+            <th rowspan="3"> <label>Total Omset</label></th>
+            <td rowspan="3">@convert($total_cash + $total_credit ) </td>
 
             <th> <label>Room Charge</label></th>
             <td>@convert($total_room) </td>
