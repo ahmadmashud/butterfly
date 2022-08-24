@@ -174,22 +174,26 @@ class TransactionServiceImpl implements TransactionService
             $payment['nama'] = $request->nama;
             $payment['amount_credit'] = $request->credit == null ? 0 : $request->credit;
             $payment['amount_cash'] = $request->cash == null ? 0 : $request->cash;
-            
+
             // calculate cash if over paid & if payment method cash credit
-            $total_paid = $payment['amount_credit']  + $payment['amount_cash']; 
+            $total_paid = $payment['amount_credit']  + $payment['amount_cash'];
             $total_bill = HelperCustom::unformatNumber($request->total);
-            if($total_paid > $total_bill && $payment['metode_pembayaran'] == 'CASH_CREDIT'){
+            if ($total_paid > $total_bill && $payment['metode_pembayaran'] == 'CASH_CREDIT' || $payment['metode_pembayaran'] == 'CASH') {
                 $kembalian = HelperCustom::unformatNumber($request->kembalian);
                 $payment['amount_cash'] =   $payment['amount_cash'] - $kembalian;
+            } else  if ($total_paid > $total_bill && $payment['metode_pembayaran'] == 'CREDIT') {
+                $kembalian = HelperCustom::unformatNumber($request->kembalian);
+                $payment['amount_credit'] =   $payment['amount_credit'] - $kembalian;
             }
-            
+
+
             $payment['amount_total'] = $payment['amount_cash'] + $payment['amount_credit'];
             $payment =  Payment::create($payment);
             //calculate KOMISI
             if ($request->metode_pembayaran != 'CANCEL' && $transaction['amount_harga_produk']  > 0) {
                 $this->generateKomisiTerapis($transaction);
                 $this->generateKomisiSupplier($transaction);
-                $this->generateKomisiUser($transaction); 
+                $this->generateKomisiUser($transaction);
             }
             DB::commit();
         } catch (\Exception $e) {
