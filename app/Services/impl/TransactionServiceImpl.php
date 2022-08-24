@@ -189,7 +189,7 @@ class TransactionServiceImpl implements TransactionService
             if ($request->metode_pembayaran != 'CANCEL' && $transaction['amount_harga_produk']  > 0) {
                 $this->generateKomisiTerapis($transaction);
                 $this->generateKomisiSupplier($transaction);
-                // $this->generateKomisiUser($transaction); manual select
+                $this->generateKomisiUser($transaction); 
             }
             DB::commit();
         } catch (\Exception $e) {
@@ -224,29 +224,28 @@ class TransactionServiceImpl implements TransactionService
         KomisiSupplier::create($komisi);
     }
 
-    // manual select
-    // function generateKomisiUser(Transaction $transaction)
-    // {
-    //     // komisi produk sales/gro
-    //     $komisi_produk_gro = $transaction->product_trx->sum(function ($item) {
-    //         return $item->product->km_gro * $item->qty;
-    //     });
+    function generateKomisiUser(Transaction $transaction)
+    {
+        // komisi produk sales/gro
+        $komisi_produk_gro = $transaction->product_trx->sum(function ($item) {
+            return $item->product->km_gro * $item->qty;
+        });
 
-    //     // komisi user sTaff
-    //     $komisi_produk_staff = $transaction->product_trx->sum(function ($item) {
-    //         return $item->product->km_staff * $item->qty;
-    //     });
-    //     // komisi user spv
-    //     $komisi_produk_spv = $transaction->product_trx->sum(function ($item) {
-    //         return $item->product->km_spv * $item->qty;
-    //     });
+        // komisi user sTaff
+        $komisi_produk_staff = $transaction->product_trx->sum(function ($item) {
+            return $item->product->km_staff * $item->qty;
+        });
+        // komisi user spv
+        $komisi_produk_spv = $transaction->product_trx->sum(function ($item) {
+            return $item->product->km_spv * $item->qty;
+        });
 
-    //     $komisi['id_trx'] = $transaction->id;
-    //     $komisi['amount_km_gro'] =  $komisi_produk_gro;
-    //     $komisi['amount_km_spv'] = $komisi_produk_spv;
-    //     $komisi['amount_km_staff'] = $komisi_produk_staff;
-    //     KomisiUser::create($komisi);
-    // }
+        $komisi['id_trx'] = $transaction->id;
+        $komisi['amount_km_gro'] =  $komisi_produk_gro;
+        $komisi['amount_km_spv'] = $komisi_produk_spv;
+        $komisi['amount_km_staff'] = $komisi_produk_staff;
+        KomisiUser::create($komisi);
+    }
 
     function toModelProductTrx(Request $request, $id)
     {

@@ -112,28 +112,40 @@ class KomisiGajiServiceImpl implements KomisiGajiService
     {
 
         $data = DB::select(DB::raw("select
-        mu.nama as sales,
+        mu.nama sales,
         mu.code ,
         sum(ttp.qty) as qty ,
-        sum(ttp.qty * mp.km_gro) as gro,
-        sum(ttp.qty * mp.km_spv) as manager,
-        sum(ttp.qty * mp.km_staff) as staff
+        sum(tku.amount_km_gro) as gro ,
+        sum(tku.amount_km_spv) as manager ,
+        sum(tku.amount_km_staff) as staff
     from
-        t_transaction_products ttp
-    inner join m_products mp on
-        ttp.id_produk = mp.id
-    inner join t_transactions tt on
+        t_komisi_users tku
+    inner join t_transactions tt 
+    on
+        tku.id_trx = tt.id
+    inner join (
+        select
+            ttp.id_trx,
+            sum(ttp.qty) as qty
+        from
+            t_transaction_products ttp
+        inner join t_transactions tt on
+            ttp.id_trx = tt.id
+        where
+            tt.tanggal between '$tanggal_awal' and '$tanggal_akhir'
+        group by
+            ttp.id_trx) ttp 
+    on
         tt.id = ttp.id_trx
-        and tt.status = 'PAID'
     inner join m_users mu on
-        tt.id_sales = mu.id
+        mu.id = tt.id_sales
     where
-        tt.tanggal between '$tanggal_awal' and '$tanggal_akhir'
+            tt.tanggal between '$tanggal_awal' and '$tanggal_akhir'
     group by
         sales,
         code
     order by
-        code asc"));
+        code"));
 
         $data_groups = collect($data)->groupBy('sales');
 
