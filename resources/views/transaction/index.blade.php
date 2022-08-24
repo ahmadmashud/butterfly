@@ -15,6 +15,15 @@
         top: 0;
         left: 0;
     }
+    .blink {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
 </style>
 <div class="page-heading">
     <!-- <h3 class="page-title" style="text-align: center;">Daftar {{$title}}</h3> -->

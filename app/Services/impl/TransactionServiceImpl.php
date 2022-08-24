@@ -172,8 +172,17 @@ class TransactionServiceImpl implements TransactionService
             $payment['metode_pembayaran'] = $request->metode_pembayaran;
             $payment['no_rek'] = $request->no_rek;
             $payment['nama'] = $request->nama;
-            $payment['amount_cash'] = $request->cash == null ? 0 : $request->cash;
             $payment['amount_credit'] = $request->credit == null ? 0 : $request->credit;
+            $payment['amount_cash'] = $request->cash == null ? 0 : $request->cash;
+            
+            // calculate cash if over paid & if payment method cash credit
+            $total_paid = $payment['amount_credit']  + $payment['amount_cash']; 
+            $total_bill = HelperCustom::unformatNumber($request->total);
+            if($total_paid > $total_bill && $payment['metode_pembayaran'] == 'CASH_CREDIT'){
+                $kembalian = HelperCustom::unformatNumber($request->kembalian);
+                $payment['amount_cash'] =   $payment['amount_cash'] - $kembalian;
+            }
+            
             $payment['amount_total'] = $payment['amount_cash'] + $payment['amount_credit'];
             $payment =  Payment::create($payment);
             //calculate KOMISI

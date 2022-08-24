@@ -178,20 +178,20 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="row" id="m_cash" style="display: none;">
-                                            <div class="col-sm-4 form-group">
-                                                <label>Cash: </label>
-                                            </div>
-                                            <div class="col-sm-8 form-group">
-                                                <input id="cash" name="cash" class="form-control calculate_kembalian" type="text">
-                                            </div>
-                                        </div>
                                         <div class="row" id="m_credit" style="display: none;">
                                             <div class="col-sm-4 form-group">
                                                 <label>Credit: </label>
                                             </div>
                                             <div class="col-sm-8 form-group">
                                                 <input id="credit" name="credit" class="form-control calculate_kembalian" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="row" id="m_cash" style="display: none;">
+                                            <div class="col-sm-4 form-group">
+                                                <label>Cash: </label>
+                                            </div>
+                                            <div class="col-sm-8 form-group">
+                                                <input id="cash" name="cash" class="form-control calculate_kembalian" type="text">
                                             </div>
                                         </div>
                                         <div class="row" id="m_nama" style="display: none;">
