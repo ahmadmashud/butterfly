@@ -35,13 +35,13 @@ class LaporanController extends Controller
         if (HelperCustom::isValidAccess('LAPORAN')) {
 
             return abort(401);
-        }   
+        }
         $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
         $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
         $data = $this->laporanService->get($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran)
-        ->filter(function ($trx) {
-            return $trx->payment != null;
-        });
+            ->filter(function ($trx) {
+                return $trx->payment != null;
+            });
         return response()
             ->view('laporan.index', [
                 'data' =>  $data,
@@ -77,9 +77,9 @@ class LaporanController extends Controller
         $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
         $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
         $data = $this->laporanService->get($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran)
-        ->filter(function ($trx) {
-            return $trx->payment != null;
-        });
+            ->filter(function ($trx) {
+                return $trx->payment != null;
+            });
         return Excel::download(new LaporanExport($data), 'Laporan' . HelperCustom::formatDate($tanggal_awal) . 'sd' . HelperCustom::formatDate($tanggal_akhir)  . '.xlsx');
     }
 
@@ -91,7 +91,7 @@ class LaporanController extends Controller
         $data = $this->laporanService->get($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran)
             ->filter(function ($trx) {
                 return $trx->payment != null;
-            });
+            })->sortBy('tanggal');
 
         $total_cash = $data->filter(function ($trx) {
             return $trx->payment != null && $trx->payment->metode_pembayaran == 'CASH';
@@ -103,6 +103,18 @@ class LaporanController extends Controller
             return $trx->payment != null && $trx->payment->metode_pembayaran == 'CREDIT';
         })->map(function ($trx) {
             return $trx['amount_grand_total'];
+        })->sum();
+
+        $total_credit_addtional = $data->filter(function ($trx) {
+            return $trx->payment != null && $trx->payment->metode_pembayaran == 'CASH_CREDIT';
+        })->map(function ($trx) {
+            return $trx->payment->amount_credit;
+        })->sum();
+
+        $total_cash_addtional = $data->filter(function ($trx) {
+            return $trx->payment != null && $trx->payment->metode_pembayaran == 'CASH_CREDIT';
+        })->map(function ($trx) {
+            return $trx->payment->amount_cash;
         })->sum();
 
         $total_foc = $data->filter(function ($trx) {
@@ -148,8 +160,8 @@ class LaporanController extends Controller
             'data' => $data,
             'tanggal_awal' => $tanggal_awal,
             'tanggal_akhir' =>  $tanggal_akhir,
-            'total_cash' => $total_cash,
-            'total_credit' => $total_credit,
+            'total_cash' => $total_cash + $total_cash_addtional,
+            'total_credit' => $total_credit + $total_credit_addtional,
             'total_foc' => $total_foc,
             'total_room' => $total_room,
             'total_diskon' => $total_diskon,
@@ -178,7 +190,7 @@ class LaporanController extends Controller
         $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
         $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
         $data = $this->laporanService->getFnd($tanggal_awal, $tanggal_akhir)->groupBy('category')->toArray();
-    
+
         $data = [
             'data' => $data,
             'tanggal_awal' => $tanggal_awal,
