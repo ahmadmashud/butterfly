@@ -45,7 +45,7 @@
                     </div>
 
                     @foreach($lokers as $key => $value)
-                    <div class="col-sm-3 {{ $value->is_used ? 'used' : 'unused' }}" style="border-style: solid;border-color: black;text-align: center;">
+                    <div id="loker{{$value->id}}" class="col-sm-3 {{ $value->is_used ? 'used' : 'unused' }}" style="border-style: solid;border-color: black;text-align: center;">
                         {{$value->no}}
                     </div>
                     @endforeach
@@ -103,7 +103,7 @@
                             <input value="{{$value->jumlah_sesi}}" class="form-control" type="text" readonly>
                         </div>
                         <div class="col-sm-5 form-group">
-                            <input style="background-color: red;color:white;" data-countdown="{{ $value->status == 'ACCEPTED' ? $value->tanggal_keluar : null }}" class="form-control" type="text" readonly>
+                            <input data-id_loker ="{{$value->id_loker}}" style="background-color: red;color:white;" data-countdown="{{ $value->status == 'ACCEPTED' ? $value->tanggal_keluar : null }}" class="form-control" type="text" readonly>
                         </div>
                     </div>
                     <div class="row">

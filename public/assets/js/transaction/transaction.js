@@ -172,9 +172,17 @@ function calculateTotal() {
 
 $('[data-countdown]').each(function () {
     var $this = $(this),
-        finalDate = $(this).data('countdown');
+        finalDate = $(this).data('countdown'),
+        id_loker = $(this).data('id_loker');
     $this.countdown(finalDate, function (event) {
         $this.val(event.strftime('%H:%M:%S'));
+        if (event.offset.hours == 0 && event.offset.minutes <= 9 && event.offset.seconds > 0) {
+            $('#loker' + id_loker).addClass("blink");
+        } else if (event.offset.hours == 0 && event.offset.minutes == 0 && event.offset.seconds == 0) {
+            $('#loker' + id_loker).removeClass("blink");
+            $('#loker' + id_loker).removeClass("used");
+            $('#loker' + id_loker).addClass("unused");
+        }
     })
     // .on('finish.countdown', function() { callback
     //     $(this).hide();
@@ -307,7 +315,7 @@ $(document).on('change', '[name=produk]', function (e) {
 
 $(document).on('click', '#add_produk', function (e) {
     var id_produk = $('[name=produk]').val();
-    var isHasSelected = $("[name='id_produk[]']").map(function() {    
+    var isHasSelected = $("[name='id_produk[]']").map(function () {
         return this.value == id_produk;
     })[0];
 
