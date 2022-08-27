@@ -39,7 +39,9 @@
         <div class="ibox">
             <div class="ibox-head">
                 <div class="text-left">
-                    <button class="btn btn-primary text-left" >Simpan</button>
+                    @if(Session::get('user')->username == 'admin')
+                    <button class="btn btn-primary text-left">Simpan</button>
+                    @endif
                 </div>
             </div>
             <div class="ibox-body">
@@ -91,8 +93,8 @@
                             <td>@convert($value->amount_total_pajak)</td>
                             <td>{{ $value->payment != null ? config('constants.metode_pembayaran')[$value->payment->metode_pembayaran] : '-'}}</td>
                             <td>
-                            <a href="/laporan/transaction/{{ $value->id }}/pdf" target="_blank" class="btn btn-success"><span class="fa fa-print"></span></a>
-                        </td>
+                                <a href="/laporan/transaction/{{ $value->id }}/pdf" target="_blank" class="btn btn-success"><span class="fa fa-print"></span></a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -106,6 +108,12 @@
 @endsection
 
 
+
 @section('extra_javascript')
+@if(Session::get('user')->username != 'admin')
+<script type="text/javascript">
+    document.querySelectorAll(".check").forEach(el => el.remove());
+</script>
+@endif
 <script src="{{ asset('assets/js/laporan/laporan2.js') }}" type="text/javascript"> </script>
 @endsection
