@@ -11,4 +11,5 @@ interface LaporanService
     function getProducts($tanggal_awal, $tanggal_akhir);
     function getProductsRekap($tanggal_awal, $tanggal_akhir);
     function  choose(Request $request);
+    function  getR($tanggal_awal, $tanggal_akhir, $metode_pembayaran);
 }

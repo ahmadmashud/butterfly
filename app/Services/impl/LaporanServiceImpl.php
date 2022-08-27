@@ -16,9 +16,9 @@ class LaporanServiceImpl implements LaporanService
     function get($tanggal_awal, $tanggal_akhir, $metode_pembayaran)
     {
         $transaction = Transaction::with(['terapis', 'room', 'loker', 'produk', 'paket', 'payment'])
+            ->where('t_transactions.status', '<>', 'CANCEL')
             ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
             ->orderBy('tanggal_masuk', 'desc')->get();
-
 
         if ($metode_pembayaran != null) {
             return  $transaction->filter(function ($trx) use ($metode_pembayaran) {
@@ -86,18 +86,50 @@ class LaporanServiceImpl implements LaporanService
             ->join('m_products', 'm_products.id', '=', 't_transaction_products.id_produk')
             ->where('t_transactions.status', 'PAID')
             ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
-            ->groupBy( 'code','nama', 'harga')->orderBy('tanggal', 'desc')->get();
+            ->groupBy('code', 'nama', 'harga')->orderBy('tanggal', 'desc')->get();
     }
 
     function  choose(Request $request)
     {
-        foreach ($request->id as $key => $value) {
-            $trx =  Transaction2::firstWhere('id', $value);
-            if ($trx == null) {
-                $item['id_trx'] =  $value;
-                $item['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
-                Transaction2::create($item);
-            }
-        };
+        if (isset($request->id)) {
+            foreach ($request->id as $key => $value) {
+                $trx =  Transaction2::firstWhere('id_trx', $value);
+
+                if ($trx == null) {
+                    $item['id_trx'] =  $value;
+                    $item['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
+                    Transaction2::create($item);
+                }
+            };
+        }
+
+        if (isset($request->id_delete)) {
+            foreach ($request->id_delete as $key => $value) {
+                $trx =  Transaction2::firstWhere('id_trx', $value);
+                $trx->delete();
+            };
+        }
+    }
+
+    function getR($tanggal_awal, $tanggal_akhir, $metode_pembayaran)
+    {
+
+        $transaction =  Transaction::select(
+            't_transactions.*'
+        )
+            ->join('t_transactions2', 't_transactions2.id_trx', '=', 't_transactions.id')
+            ->where('t_transactions.status', '<>', 'CANCEL')
+            ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
+            ->orderBy('tanggal', 'asc')->get();
+        //  dd($transaction);
+        if ($metode_pembayaran != null) {
+            return  $transaction->filter(function ($trx) use ($metode_pembayaran) {
+                if ($trx->payment == null) {
+                    return false;
+                }
+                return in_array($trx->payment->metode_pembayaran, $metode_pembayaran);
+            });
+        }
+        return $transaction;
     }
 }

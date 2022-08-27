@@ -57,4 +57,14 @@ class Transaction extends Model
     {
         return $this->hasOne(User::class, 'id', 'id_sales');
     }
+    
+    public function transaction2()
+    {
+        return $this->hasOne(Transaction2::class, 'id_trx', 'id');
+    }
+
+    public function komisi_terapis()
+    {
+        return $this->hasOne(KomisiTerapis::class, 'id_trx', 'id');
+    }
 }

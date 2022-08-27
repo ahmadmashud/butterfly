@@ -38,7 +38,7 @@ class LaporanController extends Controller
         }
         $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
         $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
-        $data = $this->laporanService->get($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran)
+        $data = $this->laporanService->getR($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran)
             ->filter(function ($trx) {
                 return $trx->payment != null;
             });
@@ -76,7 +76,7 @@ class LaporanController extends Controller
 
         $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
         $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
-        $data = $this->laporanService->get($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran)
+        $data = $this->laporanService->getR($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran)
             ->filter(function ($trx) {
                 return $trx->payment != null;
             });
@@ -88,7 +88,7 @@ class LaporanController extends Controller
 
         $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
         $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
-        $data = $this->laporanService->get($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran)
+        $data = $this->laporanService->getR($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran)
             ->filter(function ($trx) {
                 return $trx->payment != null;
             })->sortBy('tanggal');
@@ -148,12 +148,10 @@ class LaporanController extends Controller
             return $trx['amount_total_service_charge'];
         })->sum();
 
-        $komisi_terapis = $this->komisiGajiService->getRekapTerapis($tanggal_awal, $tanggal_akhir);
-
-        $total_fee_terapis = $komisi_terapis->values()->map(function ($trx) {
-            return $trx->map(function ($komisi) {
-                return $komisi->total;
-            })->sum();
+        $total_fee_terapis = $data->map(function ($trx) {
+            if ($trx->komisi_terapis != null) {
+                return $trx->komisi_terapis->amount_km_total;
+            }
         })->sum();
 
         $data = [
@@ -279,5 +277,99 @@ class LaporanController extends Controller
         $pdf = PDF::loadView('laporan.print.receipt', $data)->setPaper($customPaper, 'landscape');;
 
         return $pdf->stream('testing.pdf');
+    }
+
+    public function print_r_laporan_pdf(Request $request)
+    {
+
+        $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
+        $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
+        $data = $this->laporanService->get($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran)
+            ->filter(function ($trx) {
+                return $trx->payment != null;
+            })->sortBy('tanggal');
+
+        $total_cash = $data->filter(function ($trx) {
+            return $trx->payment != null && $trx->payment->metode_pembayaran == 'CASH';
+        })->map(function ($trx) {
+            return $trx['amount_grand_total'];
+        })->sum();
+
+        $total_credit = $data->filter(function ($trx) {
+            return $trx->payment != null && $trx->payment->metode_pembayaran == 'CREDIT';
+        })->map(function ($trx) {
+            return $trx['amount_grand_total'];
+        })->sum();
+
+        $total_credit_addtional = $data->filter(function ($trx) {
+            return $trx->payment != null && $trx->payment->metode_pembayaran == 'CASH_CREDIT';
+        })->map(function ($trx) {
+            return $trx->payment->amount_credit;
+        })->sum();
+
+        $total_cash_addtional = $data->filter(function ($trx) {
+            return $trx->payment != null && $trx->payment->metode_pembayaran == 'CASH_CREDIT';
+        })->map(function ($trx) {
+            return $trx->payment->amount_cash;
+        })->sum();
+
+        $total_foc = $data->filter(function ($trx) {
+            return $trx->payment != null && $trx->payment->metode_pembayaran == 'FOC';
+        })->map(function ($trx) {
+            return $trx['amount_grand_total'];
+        })->sum();
+
+        $total_room = $data->map(function ($trx) {
+            return $trx['amount_harga_paket'] * $trx['jumlah_sesi'];
+        })->sum();
+
+        $total_diskon = $data->map(function ($trx) {
+            return $trx['amount_total_discount'];
+        })->sum();
+
+
+        $total_fnd = $data->map(function ($trx) {
+            return $trx['amount_total_fnd'];
+        })->sum();
+
+        $total_harga_produk = $data->map(function ($trx) {
+            return $trx['amount_harga_produk'];
+        })->sum();
+
+        $total_tax = $data->map(function ($trx) {
+            return $trx['amount_total_pajak'];
+        })->sum();
+
+        $total_service = $data->map(function ($trx) {
+            return $trx['amount_total_service_charge'];
+        })->sum();
+
+        $komisi_terapis = $this->komisiGajiService->getRekapTerapis($tanggal_awal, $tanggal_akhir);
+
+        $total_fee_terapis = $komisi_terapis->values()->map(function ($trx) {
+            return $trx->map(function ($komisi) {
+                return $komisi->total;
+            })->sum();
+        })->sum();
+
+        $data = [
+            'data' => $data,
+            'tanggal_awal' => $tanggal_awal,
+            'tanggal_akhir' =>  $tanggal_akhir,
+            'total_cash' => $total_cash + $total_cash_addtional,
+            'total_credit' => $total_credit + $total_credit_addtional,
+            'total_foc' => $total_foc,
+            'total_room' => $total_room,
+            'total_diskon' => $total_diskon,
+            'total_fnd' => $total_fnd,
+            'total_harga_produk' => $total_harga_produk,
+            'total_tax' => $total_tax,
+            'total_service' => $total_service,
+            'total_fee_terapis' => $total_fee_terapis
+
+        ];
+        $pdf = PDF::loadView('laporan.print.transaction', $data)->setPaper('a4', 'landscape');;
+
+        return $pdf->stream('Laporan Transaksi.pdf');
     }
 }

@@ -28,13 +28,13 @@
                 <br>
                 <div class="text-left">
                     <button class="btn btn-primary" type="submit">Cari</button>
-                    <button id="bntPrint" class="btn btn-success" type="button">Print Excel</button>
+                    <button id="bntPrint" class="btn btn-success" type="button">Print</button>
                     <a class="btn btn-secondary" href="/laporan">Reset</a>
                 </div>
             </form>
         </div>
     </div>
-    <form action="/laporan/r" method="POST">
+    <form id="form" action="/laporan/r" method="POST">
         @csrf
         <div class="ibox">
             <div class="ibox-head">
@@ -46,7 +46,9 @@
                 <table class="table table-striped table-bordered" id="example-table-fixed-column-scrollx" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <td><input type="checkbox" id="checkAll"></td>
+                            <td>
+                                <!-- <input type="checkbox" id="checkAll"> -->
+                            </td>
                             <th>No</th>
                             <th>ID</th>
                             <th>Tanggal</th>
@@ -70,7 +72,7 @@
                     <tbody>
                         @foreach($data as $key => $value)
                         <tr>
-                            <td><input class="check" type="checkbox" name="id[]" value="{{ $value->id}}" id-data="{{ $value->id}}"></td>
+                            <td><input {{ $value->transaction2 != null ? 'checked' : '' }} class="check" type="checkbox" name="id[]" value="{{ $value->id}}" id-data="{{ $value->id}}"></td>
                             <td>{{ $loop->index + 1 }}</td>
                             <td>{{ $value->trx_no }}</td>
                             <td>{{ HelperCustom::formatDateTime($value->tanggal_masuk) }}</td>
@@ -89,8 +91,8 @@
                             <td>@convert($value->amount_total_pajak)</td>
                             <td>{{ $value->payment != null ? config('constants.metode_pembayaran')[$value->payment->metode_pembayaran] : '-'}}</td>
                             <td>
-                                <a href="/laporan/print/{{ $value->id }}" class="btn btn-primary">Print</a>
-                            </td>
+                            <a href="/laporan/transaction/{{ $value->id }}/pdf" target="_blank" class="btn btn-success"><span class="fa fa-print"></span></a>
+                        </td>
                         </tr>
                         @endforeach
                     </tbody>
