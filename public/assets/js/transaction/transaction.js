@@ -281,6 +281,9 @@ $(document).on('click', '.btnPayment', function (e) {
             $('#total_diskon').val(formatMoney(data.amount_total_discount));
             $('#service_charge').val(formatMoney(data.amount_total_service_charge));
             $('#total').val(formatMoney(data.amount_grand_total));
+            
+            // print
+            $('#print_struk').attr('href','/laporan/transaction/'+data.id+'/pdf');
 
             // reset modal
             $('#payment').find('input,select').val('');
