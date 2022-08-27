@@ -205,7 +205,10 @@ class LaporanController extends Controller
     {
         $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
         $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
-        $data = $this->laporanService->get($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran);
+        $data = $this->laporanService->get($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran)
+        ->filter(function ($trx) {
+            return $trx->payment != null;
+        });
         return response()
             ->view('laporan.r.index_r', [
                 'data' =>  $data,
