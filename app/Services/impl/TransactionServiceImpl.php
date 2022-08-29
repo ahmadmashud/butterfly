@@ -375,6 +375,11 @@ class TransactionServiceImpl implements TransactionService
 
         DB::beginTransaction();
         try {
+
+            $transaction = Transaction::where('id', $id)->firstOrFail();
+            // handling if edit terapis/loker/room
+            $this->handlingEditParam($request, $transaction);
+
             // edit trx
             $transaction =  $this->toEditTrx($request, $id);
             $transaction->save();
@@ -385,54 +390,6 @@ class TransactionServiceImpl implements TransactionService
             // edit trx fnd if exists
             $this->handlingEditFnd($request, $id);
 
-            // update flag in terapis if change
-
-            $totalDuration = Carbon::parse($transaction->tanggal_masuk)->diffInSeconds(Carbon::parse($transaction->tanggal_keluar));
-            $status = gmdate('H:i:s', $totalDuration) <= '00:10:00' ? 'FINISHING'  : 'PROGRESING';
-
-            $id_terapis_old =  $transaction['id_terapis'];
-            $id_terapis_new =  $request->terapis;
-            if ($id_terapis_new != $id_terapis_old) {
-                $terapis_old = Terapis::where('id', $id_terapis_old)->firstOrFail();
-                $terapis_old->status = 'AVAILABLE';
-                $terapis_old->save();
-
-
-                $terapis_new = Terapis::where('id', $id_terapis_new)->firstOrFail();
-                $terapis_new->status =  $status;
-                $terapis_new->save();
-            } else {
-                $terapis = Terapis::where('id', $id_terapis_old)->firstOrFail();
-                $terapis->status = $status;
-                $terapis->save();
-            }
-
-
-            // update flag in room if change
-            $id_room_old =  $transaction['id_room'];
-            $id_room_new =  $request->room;
-            if ($id_room_new != $id_room_old) {
-                $room_old = Room::where('id', $$id_room_old)->firstOrFail();
-                $room_old->is_used = false;
-                $room_old->save();
-
-                $room_new = Room::where('id', $id_room_new)->firstOrFail();
-                $room_new->is_used = false;
-                $room_new->save();
-            }
-
-            // update flag in loker
-            $id_loker_old =  $transaction['id_loker'];
-            $id_loker_new =  $request->loker;
-            if ($id_loker_new != $id_loker_new) {
-                $loker_old = Loker::where('id', $$id_loker_old)->firstOrFail();
-                $loker_old->is_used = false;
-                $loker_old->save();
-
-                $loker_new = Room::where('id', $id_loker_new)->firstOrFail();
-                $loker_new->is_used = false;
-                $loker_new->save();
-            }
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
@@ -441,6 +398,57 @@ class TransactionServiceImpl implements TransactionService
             return redirect()
                 ->route('user.index')
                 ->with('warning', 'Something Went Wrong!');
+        }
+    }
+
+    function handlingEditParam(Request $request, $transaction)
+    {
+        // update flag in terapis if change
+        $totalDuration = Carbon::parse($transaction->tanggal_masuk)->diffInSeconds(Carbon::parse($transaction->tanggal_keluar));
+        $status = gmdate('H:i:s', $totalDuration) <= '00:10:00' ? 'FINISHING'  : 'PROGRESING';
+
+        $id_terapis_old =  $transaction['id_terapis'];
+        $id_terapis_new =  $request->terapis;
+        if ($id_terapis_new != $id_terapis_old) {
+            $terapis_old = Terapis::where('id', $id_terapis_old)->firstOrFail();
+            $terapis_old->status = 'AVAILABLE';
+            $terapis_old->save();
+
+
+            $terapis_new = Terapis::where('id', $id_terapis_new)->firstOrFail();
+            $terapis_new->status =  $status;
+            $terapis_new->save();
+        } else {
+            $terapis = Terapis::where('id', $id_terapis_old)->firstOrFail();
+            $terapis->status = $status;
+            $terapis->save();
+        }
+
+
+        // update flag in room if change
+        $id_room_old =  $transaction['id_room'];
+        $id_room_new =  $request->room;
+        if ($id_room_new != $id_room_old) {
+            $room_old = Room::where('id', $$id_room_old)->firstOrFail();
+            $room_old->is_used = false;
+            $room_old->save();
+
+            $room_new = Room::where('id', $id_room_new)->firstOrFail();
+            $room_new->is_used = true;
+            $room_new->save();
+        }
+
+        // update flag in loker
+        $id_loker_old =  $transaction['id_loker'];
+        $id_loker_new =  $request->loker;
+        if ($id_loker_old != $id_loker_new) {
+            $loker_old = Loker::where('id', $id_loker_old)->firstOrFail();
+            $loker_old->is_used = false;
+            $loker_old->save();
+
+            $loker_new = Loker::where('id', $id_loker_new)->firstOrFail();
+            $loker_new->is_used = true;
+            $loker_new->save();
         }
     }
 

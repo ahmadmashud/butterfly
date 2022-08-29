@@ -169,24 +169,25 @@ function calculateTotal() {
 }
 
 // ============== INDEX TRX
-
-$('[data-countdown]').each(function () {
-    var $this = $(this),
-        finalDate = $(this).data('countdown'),
-        id_loker = $(this).data('id_loker');
-    $this.countdown(finalDate, function (event) {
-        $this.val(event.strftime('%H:%M:%S'));
-        if (event.offset.hours == 0 && event.offset.minutes <= 9 && event.offset.seconds > 0) {
-            $('#loker' + id_loker).addClass("blink");
-        } else if (event.offset.hours == 0 && event.offset.minutes == 0 && event.offset.seconds == 0) {
-            $('#loker' + id_loker).removeClass("blink");
-            $('#loker' + id_loker).removeClass("used");
-            $('#loker' + id_loker).addClass("unused");
-        }
-    })
-    // .on('finish.countdown', function() { callback
-    //     $(this).hide();
-    // });
+$(document).ready(function () {
+    $('[data-countdown]').each(function () {
+        var $this = $(this),
+            finalDate = $(this).data('countdown'),
+            id_loker = $(this).data('id_loker');
+        $this.countdown(finalDate, function (event) {
+            $this.val(event.strftime('%H:%M:%S'));
+            if (event.offset.hours == 0 && event.offset.minutes <= 9 && event.offset.seconds > 1) {
+                $('#loker' + id_loker).addClass("blink");
+            } else if (event.offset.hours == 0 && event.offset.minutes == 0 && event.offset.seconds == 1) {
+                $('#loker' + id_loker).removeClass("blink");
+                $('#loker' + id_loker).removeClass("used");
+                $('#loker' + id_loker).addClass("unused");
+            }
+        })
+        // .on('finish.countdown', function() { callback
+        //     $(this).hide();
+        // });
+    });
 });
 
 
@@ -281,9 +282,9 @@ $(document).on('click', '.btnPayment', function (e) {
             $('#total_diskon').val(formatMoney(data.amount_total_discount));
             $('#service_charge').val(formatMoney(data.amount_total_service_charge));
             $('#total').val(formatMoney(data.amount_grand_total));
-            
+
             // print
-            $('#print_struk').attr('href','/laporan/transaction/'+data.id+'/pdf');
+            $('#print_struk').attr('href', '/laporan/transaction/' + data.id + '/pdf');
 
             // reset modal
             $('#payment').find('input,select').val('');
