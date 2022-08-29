@@ -65,7 +65,9 @@
                             <form action="/terapis/{{ $value->id }}/delete" method="post">
                                 @csrf
                                 <button data-id="{{ $value->id }}" type="button" class="edit btn btn-success">Edit</button>
-                                <!-- <button class="btn btn-danger">Hapus</button> -->
+                                @if(Session::get('user')->username == 'admin')
+                                <button class="btn btn-danger">Hapus</button>
+                                @endif
                             </form>
                         </td>
                     </tr>

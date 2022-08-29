@@ -38,6 +38,9 @@ class TerapisServiceImpl implements TerapisService
     public function delete(int $id)
     {
         $terapis =  Terapis::where('id', $id)->firstOrFail();
+        if ($terapis->status == 'PROGRESING' || $terapis->status == 'FINISHING') {
+            dd("Terapis masih terpakai");
+        }
         if ($terapis->foto != null) {
             $this->deleteFile($terapis->foto);
         }
