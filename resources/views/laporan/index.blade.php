@@ -73,7 +73,7 @@
                         <td>{{ $value->trx_no }}</td>
                         <td>{{ HelperCustom::formatDateTime($value->tanggal_masuk) }}</td>
                         <td>{{ $value->loker->no }}</td>
-                        <td>{{ $value->terapis->nama }}</td>
+                        <td>{{ $value->terapis != null ? $value->terapis->nama : "-" }}</td>
                         <td>{{ $value->paket->nama }}</td>
                         <td>@convert($value->amount_harga_paket)</td>
                         <td>{{ $value->jumlah_sesi }}</td>
