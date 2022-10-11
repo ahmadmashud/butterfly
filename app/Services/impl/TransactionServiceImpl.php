@@ -191,10 +191,11 @@ class TransactionServiceImpl implements TransactionService
             $payment =  Payment::create($payment);
             //calculate KOMISI
             if ($request->metode_pembayaran != 'CANCEL' && $transaction['amount_harga_produk']  > 0) {
-                $this->generateKomisiSupplier($transaction);
                 $this->generateKomisiUser($transaction);
             }
+            
             if ($request->metode_pembayaran != 'CANCEL') {
+                $this->generateKomisiSupplier($transaction);
                 $this->generateKomisiTerapis($transaction);
             }
             DB::commit();
