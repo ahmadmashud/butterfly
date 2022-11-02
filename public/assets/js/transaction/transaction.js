@@ -305,6 +305,7 @@ $(document).on('change', '[name=produk]', function (e) {
     var id = this.value;
     $.ajax({
         type: 'GET',
+        async:false,
         url: base_url + 'products/' + id,
         success: function (data) {
             var data = data.data;

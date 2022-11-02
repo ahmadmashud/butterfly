@@ -91,7 +91,7 @@ class LaporanController extends Controller
         $data = $this->laporanService->getR($tanggal_awal, $tanggal_akhir, $request->metode_pembayaran)
             ->filter(function ($trx) {
                 return $trx->payment != null;
-            })->sortBy('tanggal');
+            })->sortBy('trx_no');
 
         $total_cash = $data->filter(function ($trx) {
             return $trx->payment != null && $trx->payment->metode_pembayaran == 'CASH';
@@ -152,7 +152,7 @@ class LaporanController extends Controller
             if ($trx->komisi_terapis != null) {
                 return $trx->komisi_terapis->amount_km_total;
             }
-        })->sum();
+        })->sum(); 
 
         $data = [
             'data' => $data,
