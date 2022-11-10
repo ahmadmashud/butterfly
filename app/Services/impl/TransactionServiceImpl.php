@@ -605,11 +605,11 @@ class TransactionServiceImpl implements TransactionService
                 // ONLY STATUS TERAPIS
                 $terapis['status'] = $to_status;
                 $terapis->save();
-            } else if ($to_status == 'AVAILABLE') {
+            } else if ($to_status == 'AVAILABLE' && $transaction['status'] == 'FINISHING') {
                 Log::info('masuk 2');
                 // STOP TRX
                 $transaction['status'] = 'FINISHED';
-                $transaction->save();
+                $transaction->save(); 
 
                 // update flag in terapis
                 $terapis->status = 'AVAILABLE';

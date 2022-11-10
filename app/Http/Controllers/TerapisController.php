@@ -40,7 +40,7 @@ class TerapisController extends Controller
 
             return abort(401);
         }
-
+        $order = array('AVAILABLE', 'PROGRESING', 'FINISHING', 'RESTING', 'BOOK','OFF');
         $terapis  = DB::table('m_terapis')
             ->leftJoin('t_transactions', function ($join) {
                 $join->on('m_terapis.id', '=', 't_transactions.id_terapis');
@@ -52,7 +52,14 @@ class TerapisController extends Controller
                 't_transactions.tanggal_keluar',
                 't_transactions.id as id_trx'
             )->where('is_active', true)
-            ->get();
+            ->get()->toArray();
+
+            usort($terapis, function ($a, $b) use ($order) {
+                $pos_a = array_search($a->status, $order);
+                $pos_b = array_search($b->status, $order);
+                return $pos_a - $pos_b;
+            });
+            
         return response()
             ->view('terapis.gallery', [
                 'data' =>  $terapis,
