@@ -16,6 +16,7 @@ class CreateKomisiUsersTable extends Migration
         Schema::create('t_komisi_users', function (Blueprint $table) {
             $table->id();
             $table->integer('id_trx');
+            $table->integer('id_sales');
             $table->double('amount_km_gro');
             $table->double('amount_km_spv');
             $table->double('amount_km_staff');

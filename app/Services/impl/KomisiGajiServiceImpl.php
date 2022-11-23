@@ -134,6 +134,7 @@ class KomisiGajiServiceImpl implements KomisiGajiService
             ttp.id_trx = tt.id
         where
             tt.tanggal between '$tanggal_awal' and '$tanggal_akhir'
+		AND tt.status = 'PAID'
         group by
             ttp.id_trx,
             tt.id_sales) ttp 
@@ -144,11 +145,12 @@ class KomisiGajiServiceImpl implements KomisiGajiService
         mu.id = tt.id_sales
     where
             tt.tanggal between '$tanggal_awal' and '$tanggal_akhir'
+		AND tt.status = 'PAID'
     group by
         sales,
         code
     order by
-        code"));
+        code;"));
 
         $data_groups = collect($data)->groupBy('sales');
 
