@@ -248,6 +248,7 @@ class TransactionServiceImpl implements TransactionService
         });
 
         $komisi['id_trx'] = $transaction->id;
+        $komisi['id_sales'] = $transaction->id_sales;
         $komisi['amount_km_gro'] =  $komisi_produk_gro;
         $komisi['amount_km_spv'] = $komisi_produk_spv;
         $komisi['amount_km_staff'] = $komisi_produk_staff;
