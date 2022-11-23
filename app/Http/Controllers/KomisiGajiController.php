@@ -152,9 +152,13 @@ class KomisiGajiController extends Controller
         $total = $data->map(function ($trx) {
             return $trx['total'];
         })->sum();
+        $sesi = $data->map(function ($trx) {
+            return $trx['sesi'];
+        })->sum();
 
         $data = [
             'data' => $data,
+            'sesi'=> $sesi,
             'total' => $total,
             'tanggal_awal' => $tanggal_awal,
             'tanggal_akhir' =>  $tanggal_akhir

@@ -76,7 +76,8 @@
             @endforeach
         </tbody>
         <tfoot>
-            <td style="background-color: unset;border:none" class="text" colspan="4"></td>
+            <td style="background-color: unset;border:none" class="text" colspan="3"></td>
+            <td class="number">@convert($sesi)</td>
             <td class="number">@convert($total)</td>
         </tfoot>
     </table>

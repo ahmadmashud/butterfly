@@ -126,6 +126,7 @@ class KomisiGajiServiceImpl implements KomisiGajiService
     inner join (
         select
             ttp.id_trx,
+            tt.id_sales,
             sum(ttp.qty) as qty
         from
             t_transaction_products ttp
@@ -134,9 +135,11 @@ class KomisiGajiServiceImpl implements KomisiGajiService
         where
             tt.tanggal between '$tanggal_awal' and '$tanggal_akhir'
         group by
-            ttp.id_trx) ttp 
+            ttp.id_trx,
+            tt.id_sales) ttp 
     on
         tt.id = ttp.id_trx
+        AND tt.id_sales = ttp.id_sales
     inner join m_users mu on
         mu.id = tt.id_sales
     where
