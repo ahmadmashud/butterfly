@@ -48,7 +48,7 @@
                     <h3>Progressing</h3>
                 </div>
                 <div style="background-color: aqua;" class="col-md-2">
-                    <h3>Finshing</h3>
+                    <h3>Finishing</h3>
                 </div>
                 <div style="background-color: blue;" class="col-md-2">
                     <h3>Resting</h3>
