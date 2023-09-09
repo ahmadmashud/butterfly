@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Monolog\Handler\IFTTTHandler;
 
 class TransactionServiceImpl implements TransactionService
 {
@@ -185,7 +186,7 @@ class TransactionServiceImpl implements TransactionService
                 $kembalian = HelperCustom::unformatNumber($request->kembalian);
                 $payment['amount_credit'] =   $payment['amount_credit'] - $kembalian;
             }
-
+ 
 
             $payment['amount_total'] = $payment['amount_cash'] + $payment['amount_credit'];
             $payment =  Payment::create($payment);
@@ -469,6 +470,8 @@ class TransactionServiceImpl implements TransactionService
         $transaction['nama_pelanggan'] = $request->nama_pelanggan;
         $transaction['id_room'] = $request->room;
         $transaction['tanggal'] = $request->date;
+        // for flag upgrade sesi when stop
+        $is_upgrade_sesi = $request->jumlah_sesi > $transaction['jumlah_sesi'];
         $transaction['jumlah_sesi'] = $request->jumlah_sesi;
         $transaction['durasi'] = $request->durasi;
         $transaction['id_paket'] = $request->paket;
@@ -491,6 +494,24 @@ class TransactionServiceImpl implements TransactionService
         $ketentuan_pajak = Price::where('type', 'PAJAK')->firstOrFail()->nilai;
         $transaction['pajak_term'] =  $ketentuan_pajak / 100;
         $transaction['amount_total_pajak'] =  $transaction['amount_total'] * $transaction['pajak_term'];
+
+        if($transaction['status'] == 'FINISHED' && Carbon::now() < $transaction['tanggal_keluar'] && $is_upgrade_sesi){
+            $transaction['status'] = 'ACCEPTED';
+            // update flag in terapis
+            $terapis = Terapis::where('id', $transaction->id_terapis)->firstOrFail();
+            $terapis->status = 'PROGRESING';
+            $terapis->save();
+
+            // update flag in room
+            $room = Room::where('id', $transaction->id_room)->firstOrFail();
+            $room->is_used = true;
+            $room->save();
+
+            // update flag in loker
+            $loker = Loker::where('id', $transaction->id_loker)->firstOrFail();
+            $loker->is_used = true;
+            $loker->save();
+        }
 
         return $transaction;
     }
