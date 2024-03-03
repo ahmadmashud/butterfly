@@ -102,7 +102,7 @@ class TransactionController extends Controller
         });
 
         $terapis = $this->terapisService->list()->filter(function ($value, $key) {
-            return $value->status == 'AVAILABLE' && $value->is_active;
+            return $value->status == 'AVAILABLE' || $value->status == 'BOOK'  && $value->is_active;
         });
 
         $users = $this->userService->list()->filter(function ($value, $key) {
@@ -251,5 +251,11 @@ class TransactionController extends Controller
         return response()->json([
             'data' => true
         ]);
+    }
+    
+    public function rollback(int $id)
+    {
+        $this->transactionService->rollback($id);
+        return redirect("/transactions");
     }
 }

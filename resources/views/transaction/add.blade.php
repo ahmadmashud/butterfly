@@ -106,12 +106,13 @@
                                         <label>Sales </label>
                                     </div>
                                     <div class="col-sm-7 form-group">
+                                        @if( Session::get('user')->role_id == 1 )      
                                         <select name="id_sales" class="form-control" required>
-                                            <option value="">Pilih Sales</option>
-                                            @foreach( $sales as $key => $value)
-                                            <option value="{{$value->id}}">{{$value->nama}}</option>
-                                            @endforeach
-                                        </select>
+                                            <option value="{{ Session::get('user')->id }}">{{ Session::get('user')->nama }}</option>  
+                                        </select>    
+                                        @else
+                                            <label>User bukan GRO</label>
+                                        @endif
                                     </div>
                                 </div>
                                     <hr width="100%" style="border-top: 3px line #bbb;"/>
@@ -237,8 +238,10 @@
                                         <a class="btn btn-danger" href="/transactions">Batal</a>
                                         <button type="button" class="btn btn-secondary" onClick="window.location.reload()">
                                             Reset
-                                        </button>
+                                        </button>   
+                                        @if( Session::get('user')->role_id == 1 )   
                                         <button class="btn btn-primary" type="submit">Simpan</button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

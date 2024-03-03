@@ -94,7 +94,12 @@
                             <td>{{ $value->payment != null ? config('constants.metode_pembayaran')[$value->payment->metode_pembayaran] : '-'}}</td>
                             <td>
                                 <a href="/laporan/transaction/{{ $value->id }}/pdf" target="_blank" class="btn btn-success"><span class="fa fa-print"></span></a>
-                            </td>
+                        	   @if( Session::get('user')->role_id == 3 )   
+                                <a href="/transactions/{{ $value->id }}/rollback"
+                                 onclick="if (confirm('Yakin kembalikan transaksi ini?')){return true;}else{event.stopPropagation(); 
+                                    event.preventDefault();};" class="btn btn-danger">Rollback</a>
+                                @endif  
+			</td>
                         </tr>
                         @endforeach
                     </tbody>

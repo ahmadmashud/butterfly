@@ -226,7 +226,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <a id="print_struk" href="" target="_blank" class="btn btn-success">Print Struk</a>
-                        <button class="btn btn-primary" type="submit">Simpan</button>
+                        <button class="btn btn-primary" type="submit" onclick="this.disabled=true;this.form.submit()" >Simpan</button>
                     </div>
 
             </form>

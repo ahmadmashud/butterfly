@@ -52,6 +52,7 @@ class TerapisController extends Controller
                 't_transactions.tanggal_keluar',
                 't_transactions.id as id_trx'
             )->where('is_active', true)
+            ->where('deleted', 0)
             ->get()->toArray();
 
             usort($terapis, function ($a, $b) use ($order) {

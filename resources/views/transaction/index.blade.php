@@ -162,8 +162,13 @@
                             <a href="/transactions/edit/{{$value->id}}" class="btn btn-success" type="submit">EDIT</a>
                         </div>
                         @elseif($value->status == 'FINISHED')
-                        <div class="col-sm-12 form-group right text-center">
+                        <div class="col-sm-4 form-group right text-right">
+                        </div>
+                        <div class="col-sm-5 form-group right text-right">
                             <button class="btn btn-primary btnPayment" type="button" data-id="{{$value->id}}">PEMBAYARAN</button>
+                        </div>
+                        <div class="col-sm-3 form-group right text-right">
+                            <a href="/transactions/edit/{{$value->id}}" class="btn btn-success" type="submit">EDIT</a>
                         </div>
                         @elseif($value->status == 'PAID')
                         -

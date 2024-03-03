@@ -114,12 +114,14 @@
                                         <label>Sales </label>
                                     </div>
                                     <div class="col-sm-7 form-group">
-                                        <select name="id_sales" class="form-control" required>
-                                            <option value="">Pilih Sales</option>
+                                        <select readonly name="id_sales" class="form-control" required>
                                             @foreach( $sales as $key => $value)
+                                            
+                                            @if( $data->id_sales == $value->id )   
                                             <option {{ $data->id_sales == $value->id ? 'selected' : '' }} value="{{$value->id}}">
                                                 {{$value->nama}}
                                             </option>
+                                            @endif
                                             @endforeach
                                         </select>
                                     </div>

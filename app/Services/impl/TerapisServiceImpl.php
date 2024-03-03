@@ -3,7 +3,6 @@
 namespace App\Services\impl;
 
 use App\Helpers\File;
-use App\Helpers\HelperCustom;
 use App\Models\Terapis;
 use App\Services\TerapisService;
 use Illuminate\Http\Request;
@@ -13,11 +12,19 @@ class TerapisServiceImpl implements TerapisService
 {
     function list()
     {
-        return Terapis::all();
+        return  Terapis::all()->filter(function ($terapis) {
+            return $terapis->deleted == 0;
+        })->values();
     }
 
     function add(Request $request)
     {
+        // validate code 
+        $exist_terapis =  Terapis::where('code', $request->code)->where('deleted', 0)->first();
+        if($exist_terapis){
+            dd("Terapis dengan kode ".$request->code." sudah ada !");     
+        }
+
         // upload foto
         $filename = File::uploadSingleFileV2($request->foto, config('constants.file_folder_terapis'));
         $terapis['nama'] = $request->nama;
@@ -27,6 +34,7 @@ class TerapisServiceImpl implements TerapisService
 
         $terapis = Terapis::create($terapis);
         $terapis['code'] = $request->code;
+        $terapis['deleted'] = 0;
         $terapis->save();
     }
 
@@ -44,7 +52,8 @@ class TerapisServiceImpl implements TerapisService
         if ($terapis->foto != null) {
             $this->deleteFile($terapis->foto);
         }
-        $terapis->delete();
+        $terapis->deleted = 1;
+        $terapis->save();
     }
 
     public function edit(Request $request)

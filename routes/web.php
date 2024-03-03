@@ -211,6 +211,8 @@ Route::controller(TransactionController::class)->group(function () {
     Route::post("/transactions/edit/{id}", "editAction")->middleware(OnlyMemberMiddleware::class);
     // EDIT STATUS ACTION
     Route::get("/transactions/{id}/status/{status}", "editStatus")->middleware(OnlyMemberMiddleware::class);
+    // ROLLBACK ACTION
+    Route::get("/transactions/{id}/rollback", "rollback")->middleware(OnlyMemberMiddleware::class);
 });
 
 
