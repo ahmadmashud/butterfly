@@ -48,6 +48,7 @@
                         <th>Fee Sesi</th>
                         <th>Komisi Terapis</th>
                         <th>Total</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,11 +62,13 @@
                         <td>@convert($value['fee_sesi'])</td>
                         <td>@convert($value['komisi_terapis'])</td>
                         <td>@convert($value['total'])</td>
+                        <td><button data-tanggal="{{ HelperCustom::formatDate($value['tanggal']) }}" data-terapis="{{ $value->nama}}"  data-id="{{ $value->ids}}" type="button" class="produk btn btn-primary">Produk</button></td>
+                        <!-- <td><a href="/komisi_gaji/terapis/produk?ids={{ $value->ids}}" class="btn btn-primary">Produk view</span></a></td> -->
                     </tr>
                     @endforeach
                 </tbody>
                 <tfoot>
-                    <td colspan="7" class="text-center"><b>Total</b></td>
+                    <td colspan="8" class="text-center"><b>Total</b></td>
                     <td><b>@convert($total)</b></td>
                 </tfoot>
             </table>
@@ -74,9 +77,11 @@
 </div>
 
 <!-- MODAL -->
+@include('komisiGaji._terapis_produk')
 @endsection
 
 
 @section('extra_javascript')
 <script src="{{ asset('assets/js/komisiGaji/terapis.js') }}" type="text/javascript"> </script>
+<script src="{{ asset('assets/js/komisiGaji/terapis_produk.js') }}" type="text/javascript"> </script>
 @endsection

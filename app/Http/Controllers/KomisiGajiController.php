@@ -103,6 +103,14 @@ class KomisiGajiController extends Controller
             ]);
     }
 
+    public function view_terapis_detail_produk(Request $request)
+    {
+        $data = $this->komisiGajiService->getTerapisTrxProduk($request->ids);
+       return response()->json([
+            $data->values()
+        ]);
+    }
+
 
     public function view_supplier(Request $request): Response
     {

@@ -5,6 +5,7 @@ namespace App\Services\impl;
 use App\Models\KomisiSupplier;
 use App\Models\KomisiTerapis;
 use App\Models\KomisiUser;
+use App\Models\TransactionProduct;
 use App\Services\KomisiGajiService;
 use Illuminate\Support\Facades\DB;
 
@@ -40,7 +41,8 @@ class KomisiGajiServiceImpl implements KomisiGajiService
                 DB::raw("SUM(t_komisi_terapis.sesi) as sesi"),
                 DB::raw("SUM(t_komisi_terapis.amount_km_paket * t_komisi_terapis.sesi) as fee_sesi"),
                 DB::raw("SUM(t_komisi_terapis.amount_km_produk) as komisi_terapis"),
-                DB::raw("SUM(t_komisi_terapis.amount_km_total) as total")
+                DB::raw("SUM(t_komisi_terapis.amount_km_total) as total"),
+                DB::raw("GROUP_CONCAT(t_transactions.id SEPARATOR ',') as ids ")
             )
             ->join('t_transactions', 't_transactions.id', '=', 't_komisi_terapis.id_trx')
             ->join('m_terapis', 'm_terapis.id', '=', 't_komisi_terapis.id_terapis')
@@ -50,6 +52,24 @@ class KomisiGajiServiceImpl implements KomisiGajiService
             ->groupBy('id_terapis', 'tanggal', 'nama', 'nama_paket')->orderBy('tanggal', 'desc')
             ->get()
             ->sortBy('nama');
+    }
+
+    function getTerapisTrxProduk($list_id_trx)
+    {
+       $result = TransactionProduct::with(['transaction','product'])
+            ->select(
+                'm_products.id',
+                'm_products.nama',
+                DB::raw("SUM(t_transaction_products.qty) as qty "),
+                't_transaction_products.harga',
+                DB::raw("SUM(t_transaction_products.total) as total ")
+            )
+            ->join('m_products', 'm_products.id', '=', 't_transaction_products.id_produk')
+            ->whereIn('t_transaction_products.id_trx' , explode(",",$list_id_trx))
+            ->groupBy('m_products.id', 'nama','harga')
+            ->get()
+            ->sortBy('nama');
+            return $result;
     }
 
 

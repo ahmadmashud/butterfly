@@ -273,6 +273,8 @@ Route::controller(KomisiGajiController::class)->group(function () {
     Route::get("/komisi_gaji/user/{id}", "view_user_detail")->middleware(OnlyMemberMiddleware::class);
     // TERAPIS 
     Route::get("/komisi_gaji/terapis", "view_terapis")->middleware(OnlyMemberMiddleware::class);
+    // TERAPIS 
+    Route::get("/komisi_gaji/terapis/produk", "view_terapis_detail_produk")->middleware(OnlyMemberMiddleware::class);
     // TERAPIS DETAIL
     Route::get("/komisi_gaji/terapis/{id}", "view_terapis_detail")->middleware(OnlyMemberMiddleware::class);
     // MENU 
