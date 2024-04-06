@@ -16,7 +16,7 @@ class LaporanServiceImpl implements LaporanService
     function get($tanggal_awal, $tanggal_akhir, $metode_pembayaran)
     {
         $transaction = Transaction::with(['terapis', 'room', 'loker', 'produk', 'paket', 'payment'])
-            ->where('t_transactions.status', '<>', 'CANCEL')
+            // ->where('t_transactions.status', '<>', 'CANCEL')
             ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
             ->orderBy('tanggal_masuk', 'desc')->get();
 
@@ -113,7 +113,7 @@ class LaporanServiceImpl implements LaporanService
 
     function getR($tanggal_awal, $tanggal_akhir, $metode_pembayaran)
     {
-
+ 
         $transaction =  Transaction::select(
             't_transactions.*'
         )
@@ -121,7 +121,6 @@ class LaporanServiceImpl implements LaporanService
             ->where('t_transactions.status', '<>', 'CANCEL')
             ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
             ->orderBy('tanggal', 'asc')->get();
-        //  dd($transaction);
         if ($metode_pembayaran != null) {
             return  $transaction->filter(function ($trx) use ($metode_pembayaran) {
                 if ($trx->payment == null) {

@@ -291,11 +291,12 @@ class LaporanController extends Controller
             ->filter(function ($trx) {
                 return $trx->payment != null;
             })->sortBy('trx_no');
+            
         $total_cash = $data->filter(function ($trx) {
             return $trx->payment != null && $trx->payment->metode_pembayaran == 'CASH';
         })->map(function ($trx) {
             return $trx['amount_grand_total'];
-        })->sum();
+        })->sum(); 
 
         $total_credit = $data->filter(function ($trx) {
             return $trx->payment != null && $trx->payment->metode_pembayaran == 'CREDIT';
@@ -321,28 +322,39 @@ class LaporanController extends Controller
             return $trx['amount_grand_total'];
         })->sum();
 
-        $total_room = $data->map(function ($trx) {
+        $total_cancel = $data->filter(function ($trx) {
+            return $trx->payment != null && $trx->payment->metode_pembayaran == 'CANCEL';
+        })->map(function ($trx) {
+            return $trx['amount_grand_total'];
+        })->sum();
+
+
+        // calculate not canceled trx
+        $data_not_canceled = $data->filter(function ($trx) {
+            return $trx->payment->metode_pembayaran != 'CANCEL';
+        });
+
+        $total_room = $data_not_canceled->map(function ($trx) {
             return $trx['amount_harga_paket'] * $trx['jumlah_sesi'];
         })->sum();
 
-        $total_diskon = $data->map(function ($trx) {
+        $total_diskon = $data_not_canceled->map(function ($trx) {
             return $trx['amount_total_discount'];
         })->sum();
 
-
-        $total_fnd = $data->map(function ($trx) {
+        $total_fnd = $data_not_canceled->map(function ($trx) {
             return $trx['amount_total_fnd'];
         })->sum();
 
-        $total_harga_produk = $data->map(function ($trx) {
+        $total_harga_produk = $data_not_canceled->map(function ($trx) {
             return $trx['amount_harga_produk'];
         })->sum();
 
-        $total_tax = $data->map(function ($trx) {
+        $total_tax = $data_not_canceled->map(function ($trx) {
             return $trx['amount_total_pajak'];
         })->sum();
 
-        $total_service = $data->map(function ($trx) {
+        $total_service = $data_not_canceled->map(function ($trx) {
             return $trx['amount_total_service_charge'];
         })->sum();
 
@@ -361,6 +373,7 @@ class LaporanController extends Controller
             'total_cash' => $total_cash + $total_cash_addtional,
             'total_credit' => $total_credit + $total_credit_addtional,
             'total_foc' => $total_foc,
+            'total_cancel'=> $total_cancel,
             'total_room' => $total_room,
             'total_diskon' => $total_diskon,
             'total_fnd' => $total_fnd,

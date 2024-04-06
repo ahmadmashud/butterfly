@@ -9,7 +9,7 @@
 <div class="page-heading">
     <h1 class="page-title">{{$title}}</h1>
     </ol>
-</div>
+</div> 
 <div class="page-content fade-in-up">
     <div class="ibox">
         <div class="ibox-body">

@@ -103,6 +103,9 @@
         <tr class="title">
             <th> <label>Total Cash</label></th>
             <td>@convert($total_cash) </td>
+
+            <th> <label>Total Cancel</label></th>
+            <td>@convert($total_cancel) </td>
             
             <th rowspan="3"> <label>Total Omset</label></th>
             <td rowspan="3">@convert($total_cash + $total_credit ) </td>
@@ -112,9 +115,6 @@
 
             <th> <label>Diskon</label></th>
             <td>@convert($total_diskon) </td>
-            
-            <th> <label>Fee Terapis</label></th>
-            <td>@convert($total_fee_terapis) </td>
         </tr>
         <tr class="title">
             <th> <label>Total Credit</label></th>
@@ -125,6 +125,9 @@
 
             <th> <label>Tax</label></th>
             <td>@convert($total_tax) </td>
+            
+            <th> <label>Fee Terapis</label></th>
+            <td>@convert($total_fee_terapis) </td>
         </tr>
         <tr class="title">
             <th> <label>Total Foc</label></th>

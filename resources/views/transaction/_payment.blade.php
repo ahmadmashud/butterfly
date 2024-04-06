@@ -173,7 +173,11 @@
                                                 <select id="metode_pembayaran" name="metode_pembayaran" class="form-control">
                                                     <option value="">------Pilih------</option>
                                                     @foreach(config('constants.metode_pembayaran') as $key => $value)
+                                                    @if( !HelperCustom::isExistsAccess('TRX_CANCEL') && $key == 'CANCEL' ) 
+                                                     
+                                                    @else
                                                     <option value="{{$key}}">{{$value}}</option>
+                                                    @endif
                                                     @endforeach
                                                 </select>
                                             </div>

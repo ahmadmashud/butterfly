@@ -63,7 +63,7 @@
                 <th>Nama</th>
                 <th>Qty</th>
                 <th>Komisi Sales</th>
-                <th>Komisi Manager</th>
+                <th>Komisi Supervisor</th>
                 <th>Komisi All Staff</th>
             </tr>
         </thead>

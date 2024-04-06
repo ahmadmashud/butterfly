@@ -32,4 +32,9 @@ class HelperCustom
             return abort(401);
         }
     }
+    
+    public static function isExistsAccess($privilege)
+    {
+     return in_array($privilege, Session::get('privileges'));
+    }
 }

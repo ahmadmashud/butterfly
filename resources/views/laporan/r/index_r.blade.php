@@ -92,7 +92,7 @@
                             <td>@convert($value->amount_grand_total)</td>
                             <td>@convert($value->amount_total_pajak)</td>
                             <td>{{ $value->payment != null ? config('constants.metode_pembayaran')[$value->payment->metode_pembayaran] : '-'}}</td>
-                            <td>
+                            <td> 
                                 <a href="/laporan/transaction/{{ $value->id }}/pdf" target="_blank" class="btn btn-success"><span class="fa fa-print"></span></a>
                         	   @if( Session::get('user')->role_id == 3 )   
                                 <a href="/transactions/{{ $value->id }}/rollback"
