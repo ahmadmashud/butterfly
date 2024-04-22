@@ -131,10 +131,10 @@ class TransactionServiceImpl implements TransactionService
             $transaction =  Transaction::where('id', $id)->firstOrFail();
             if ($transaction['status'] == 'ACCEPTED') {
                 $transaction['status'] = 'FINISHED';
-                $transaction->save();
 
                 // update time out
                 $transaction['tanggal_keluar'] = Carbon::now();
+                $transaction->save();
 
                 // update flag in terapis
                 $terapis = Terapis::where('id', $transaction->id_terapis)->firstOrFail();

@@ -147,7 +147,7 @@
                     <div class="row">
                         @if($value->status == 'ACCEPTED')
                         <div class="col-sm-4 form-group right text-right">
-                        @if (HelperCustom::isExistsAccess('TRX_CANCEL'))   
+                        @if (HelperCustom::isExistsAccess('TRX_CANCEL'))    
                             <form method="post" action="/transactions/cancel/{{$value->id}}">
                                 @csrf
                                 <button class="btn btn-warning" type="submit">CANCEL</button>

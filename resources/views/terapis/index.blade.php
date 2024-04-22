@@ -64,8 +64,8 @@
                         <td>
                             <form action="/terapis/{{ $value->id }}/delete" method="post">
                                 @csrf
-                                <button data-id="{{ $value->id }}" type="button" class="edit btn btn-success">Edit</button>
-                                @if(Session::get('user')->username == 'admin')
+                                <button data-id="{{ $value->id }}" type="button" class="edit btn btn-success">Edit</button>            
+                                @if (HelperCustom::isExistsAccess('TERAPIS_DELETE')) 
                                 <button class="btn btn-danger" onclick="if (!confirm('Apakah yakin terapis {{ $value->nama }} - {{ $value->code }}  dihapus ?')) { return false }">Hapus</button>
                                 @endif
                             </form>
