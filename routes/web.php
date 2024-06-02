@@ -263,6 +263,7 @@ Route::controller(LaporanController::class)->group(function () {
     Route::post("/laporan/r", "r_choose")->middleware(OnlyMemberMiddleware::class);
     // DOWNLOAD LAPORAN PDF
     Route::get("/laporan/r/print/pdf", "print_r_laporan_pdf")->middleware(OnlyMemberMiddleware::class);
+    Route::get("/laporan/r/print/pdf/v2", "print_r_laporan_pdf_v2")->middleware(OnlyMemberMiddleware::class);
 });
 
 

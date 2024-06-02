@@ -240,7 +240,7 @@
                                             Reset
                                         </button>   
                                         @if( Session::get('user')->role_id == 1 )   
-                                        <button class="btn btn-primary" type="submit">Simpan</button>
+                                        <button class="btn btn-primary" id="submit_button" type="submit">Simpan</button>
                                         @endif
                                     </div>
                                 </div>
