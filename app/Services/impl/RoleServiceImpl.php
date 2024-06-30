@@ -19,6 +19,7 @@ class RoleServiceImpl implements RoleService
     {
         $role['code'] = $request->code;
         $role['nama'] = $request->nama;
+        $role['is_active'] = 1;
         Role::create($role);
     }
 

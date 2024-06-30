@@ -43,6 +43,7 @@ class CreateTableTransaction extends Migration
             $table->double('pajak_term');
             $table->double('amount_total_pajak');
             $table->string('status');
+            $table->integer('qty_pdk');
             $table->timestamps();
         });
     }

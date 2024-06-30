@@ -57,6 +57,7 @@
     <p style="text-align:center">{{HelperCustom::formatDate(@$tanggal_awal) }} s/d {{ HelperCustom::formatDate(@$tanggal_akhir) }}</p>
 
     @php $grand_total_sesi = 0 @endphp
+    @php $grand_qty_pdk = 0 @endphp
     @php $grand_total_fee_sesi = 0 @endphp
     @php $grand_total_komisi_terapis = 0 @endphp
     @php $grand_total = 0 @endphp
@@ -69,6 +70,7 @@
                 <th>Nama</th>
                 <th>Paket</th>
                 <th>Total Sesi</th>
+                <th>Total Pdk</th>
                 <th>Fee Sesi</th>
                 <th>Komisi Produk</th>
                 <th>Total</th>
@@ -76,12 +78,14 @@
         </thead>
         <tbody>
             @php $total_sesi = 0 @endphp
+            @php $total_pdk = 0 @endphp
             @php $total_fee_sesi = 0 @endphp
             @php $total_komisi_terapis = 0 @endphp
             @php $total = 0 @endphp
             @foreach($obj as $key => $value)
             <tr>
                 @php $total_sesi = $total_sesi + $value['sesi'] @endphp
+                @php $total_pdk = $total_pdk + $value['qty_pdk'] @endphp
                 @php $total_fee_sesi = $total_fee_sesi + $value['fee_sesi'] @endphp
                 @php $total_komisi_terapis = $total_komisi_terapis + $value['komisi_terapis'] @endphp
                 @php $total = $total + $value['total'] @endphp
@@ -90,6 +94,7 @@
                 <td class="text">{{ $value['nama'] }}</td>
                 <td class="text">{{ $value['nama_paket'] }}</td>
                 <td class="text">{{ $value['sesi'] }}</td>
+                <td class="text">{{ $value['qty_pdk'] }}</td>
                 <td class="number">@convert($value['fee_sesi'])</td>
                 <td class="number">@convert($value['komisi_terapis'])</td>
                 <td class="number">@convert($value['total'])</td>
@@ -98,10 +103,12 @@
         </tbody>
         <tfoot>
             <td style="background-color: unset;border:none" class="text" colspan="4"></td>
-            <td class="text">@convert($total_sesi)</td>
+            <td class="text">@convert($total_sesi)</td>"4"></td>
+            <td class="text">@convert($total_pdk)</td>
             <td class="number">@convert($total_fee_sesi)</td>
             <td class="number">@convert($total_komisi_terapis)</td>
             <td class="number">@convert($total)</td>
+            @php $grand_qty_pdk = $grand_qty_pdk + $total_pdk @endphp
             @php $grand_total_sesi = $grand_total_sesi + $total_sesi @endphp
             @php $grand_total_fee_sesi = $grand_total_fee_sesi + $total_fee_sesi @endphp
             @php $grand_total_komisi_terapis = $grand_total_komisi_terapis + $total_komisi_terapis @endphp
@@ -118,6 +125,7 @@
                     Total
                 </td>
                 <td class="text"> @convert($grand_total_sesi) </td>
+                <td class="text"> @convert($grand_qty_pdk) </td>
                 <td class="number">@convert($grand_total_fee_sesi)</td>
                 <td class="number">@convert($grand_total_komisi_terapis)</td>
                 <td class="number">@convert($grand_total)</td>

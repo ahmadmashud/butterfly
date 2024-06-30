@@ -343,6 +343,7 @@ class TransactionServiceImpl implements TransactionService
         $transaction['amount_total_service_charge'] = HelperCustom::unformatNumber($request->total_service_charge);
         $transaction['amount_service_charge'] = HelperCustom::unformatNumber($request->service_charge);
         $transaction['amount_grand_total'] = HelperCustom::unformatNumber($request->grand_total);
+        $transaction['qty_pdk'] = $request->id_produk == null ? 0 : count($request->id_produk);
 
         $ketentuan_pajak = Price::where('type', 'PAJAK')->firstOrFail()->nilai;
         $transaction['pajak_term'] =  $ketentuan_pajak / 100;
@@ -493,6 +494,7 @@ class TransactionServiceImpl implements TransactionService
         $transaction['amount_total_service_charge'] = HelperCustom::unformatNumber($request->total_service_charge);
         $transaction['amount_service_charge'] = HelperCustom::unformatNumber($request->service_charge);
         $transaction['amount_grand_total'] = HelperCustom::unformatNumber($request->grand_total);
+        $transaction['qty_pdk'] = $request->id_produk == null ? 0 : count($request->id_produk);
 
         $ketentuan_pajak = Price::where('type', 'PAJAK')->firstOrFail()->nilai;
         $transaction['pajak_term'] =  $ketentuan_pajak / 100;
