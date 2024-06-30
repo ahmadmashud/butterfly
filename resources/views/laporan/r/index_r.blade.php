@@ -113,9 +113,8 @@
 @endsection
 
 
-
 @section('extra_javascript')
-@if(Session::get('user')->username != 'admin')
+@if (!HelperCustom::isExistsAccess('TAX'))    
 <script type="text/javascript">
     document.querySelectorAll(".check").forEach(el => el.remove());
 </script>
