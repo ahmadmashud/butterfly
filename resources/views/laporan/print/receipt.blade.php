@@ -47,6 +47,11 @@
             <td> {{ $data->loker->no }}</td>
         </tr>
         <tr class="title">
+            <td> <label>Room</label></td>
+            <td>: </td>
+            <td> {{ $data->room->no }}</td>
+        </tr>
+        <tr class="title">
             <td> <label>Nama</label></td>
             <td>: </td>
             <td> {{ $data->nama_pelanggan }}</td>
@@ -64,7 +69,7 @@
         <tr class="title">
             <td> <label>Therapist</label></td>
             <td>: </td>
-            <td> {{ $data->terapis->nama }}</td>
+            <td> {{ $data->terapis->nama }} - {{ $data->terapis->code }}</td>
         </tr>
     </table>
     <hr width="100%" style="border-top: 3px line #bbb;" />

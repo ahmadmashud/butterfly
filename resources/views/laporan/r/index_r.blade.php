@@ -39,7 +39,7 @@
         <div class="ibox">
             <div class="ibox-head">
                 <div class="text-left">
-                    @if(Session::get('user')->username == 'admin')
+                    @if (HelperCustom::isExistsAccess('TAX'))    
                     <button class="btn btn-primary text-left">Simpan</button>
                     @endif
                 </div>
