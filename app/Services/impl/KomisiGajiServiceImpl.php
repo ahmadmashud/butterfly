@@ -110,7 +110,7 @@ class KomisiGajiServiceImpl implements KomisiGajiService
                 't_transactions.id_terapis',
                 'm_terapis.nama',
                 'm_package_rooms.nama as nama_paket',
-                DB::raw("t_transactions.qty_pdk"),
+                DB::raw("SUM(t_transactions.qty_pdk) as qty_pdk"),
                 DB::raw("SUM(t_komisi_terapis.sesi) as sesi"),
                 DB::raw("SUM(t_komisi_terapis.amount_km_paket * t_komisi_terapis.sesi) as fee_sesi"),
                 DB::raw("SUM(t_komisi_terapis.amount_km_produk) as komisi_terapis"),
@@ -120,7 +120,7 @@ class KomisiGajiServiceImpl implements KomisiGajiService
             ->join('m_terapis', 'm_terapis.id', '=', 't_komisi_terapis.id_terapis')
             ->join('m_package_rooms', 'm_package_rooms.id', '=', 't_transactions.id_paket')
             ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
-            ->groupBy('id_terapis', 'nama', 'nama_paket', 'code','qty_pdk')->orderBy('code', 'asc')
+            ->groupBy('id_terapis', 'nama', 'nama_paket', 'code')->orderBy('code', 'asc')
             ->get()
             ->sortBy('code');
 
