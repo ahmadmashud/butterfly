@@ -24,7 +24,8 @@
                 <br>
                 <div class="text-left">
                     <!-- <button class="btn btn-primary" type="submit">Cari</button> -->
-                    <button class="btn btn-success" id="bntPrint" type="button">Print</button>
+                    <button class="btn btn-success" id="btnPrintSummary" type="button">Print Summary</button>
+                    <button class="btn btn-success" id="btnPrintDetail" type="button">Print Produk</button>
                     <a class="btn btn-secondary" href="/komisi_gaji/terapis/">Reset</a>
                 </div>
             </form>

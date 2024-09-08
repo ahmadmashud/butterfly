@@ -6,6 +6,7 @@ use App\Models\KomisiSupplier;
 use App\Models\KomisiTerapis;
 use App\Models\KomisiUser;
 use App\Models\TransactionProduct;
+use App\Models\Terapis;
 use App\Services\KomisiGajiService;
 use Illuminate\Support\Facades\DB;
 
@@ -185,5 +186,48 @@ class KomisiGajiServiceImpl implements KomisiGajiService
                 'staff' => $group->sum('staff')
             ];
         })->sortBy('code');
+    }
+    
+    function getListTerapisTrxProduk($tanggal_awal, $tanggal_akhir)
+    {
+       $result = TransactionProduct::with(['transaction','product'])
+            ->select(
+                't_transactions.id_terapis',
+                'm_products.nama',
+                DB::raw("SUM(t_transaction_products.qty) as qty "),
+                't_transaction_products.harga',
+                DB::raw("SUM(t_transaction_products.total) as total ")
+            )
+            ->join('t_transactions', 't_transactions.id', '=', 't_transaction_products.id_trx')
+            ->join('m_products', 't_transaction_products.id_produk', '=', 'm_products.id')
+            ->whereBetween('tanggal', [$tanggal_awal, $tanggal_akhir])
+            ->groupBy('t_transactions.id_terapis', 'm_products.nama','t_transaction_products.harga')
+            ->get()
+            ->sortBy('m_products.nama');
+
+            $distinctIdTerapis = $result->pluck('id_terapis')->unique()->values()->toArray();
+            $terapisData = Terapis::whereIn('id', $distinctIdTerapis)
+                                ->get(['id', 'nama', 'code']) // Fetch id, nama, and code
+                                ->keyBy('id') // Use id as the key for the array
+                                ->map(function ($terapis) {
+                                    return [
+                                        'nama' => $terapis->nama,
+                                        'code' => $terapis->code
+                                    ];
+                                })
+                                ->toArray();
+            $groupedData = $result->groupBy(function ($item) {
+                return $item->id_terapis;
+            });
+        
+            $finalResult = $groupedData->map(function ($items, $id_terapis) use ($terapisData) {
+                return [
+                    'terapis_code' => $terapisData[$id_terapis]['code'],
+                    'terapis_name' => $terapisData[$id_terapis]['nama'],
+                    'transactions' => $items
+                ];
+            });
+       
+            return $finalResult;
     }
 }

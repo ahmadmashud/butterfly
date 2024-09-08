@@ -186,10 +186,27 @@ class KomisiGajiController extends Controller
             'data' => $data,
             'tanggal_awal' => $tanggal_awal,
             'tanggal_akhir' =>  $tanggal_akhir
-
         ];
         $pdf = PDF::loadView('komisiGaji.print.user', $data);
 
         return $pdf->stream('komisi Produk Pengguna.pdf');
+    }
+
+
+    public function print_list_komisi_terapis_product(Request $request)
+    {
+        $tanggal_awal = $request->tanggal_awal != null ? $request->tanggal_awal : date('Y-m-01');
+        $tanggal_akhir = $request->tanggal_akhir != null ? $request->tanggal_akhir :  date('Y-m-t');
+        $data = $this->komisiGajiService->getListTerapisTrxProduk($tanggal_awal, $tanggal_akhir);
+        $data = [
+            'data' => $data,
+            'tanggal_awal' => $tanggal_awal,
+            'tanggal_akhir' =>  $tanggal_akhir
+
+        ];
+        
+        $pdf = PDF::loadView('komisiGaji.print.terapis_product', $data);
+
+        return $pdf->stream('komisi terapis Produk.pdf');
     }
 }

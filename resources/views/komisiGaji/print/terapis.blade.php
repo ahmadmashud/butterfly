@@ -65,7 +65,7 @@
     <table class="customers">
         <thead>
             <tr>
-                <th>No</th>
+                <th style="width: 50px;">No</th>
                 <th>ID Terapis</th>
                 <th>Nama</th>
                 <th>Paket</th>

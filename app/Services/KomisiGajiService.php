@@ -13,4 +13,5 @@ interface KomisiGajiService
     function  getSupplier($tanggal_awal, $tanggal_akhir);
     function getRekapTerapis($tanggal_awal, $tanggal_akhir);
     function getRekapUser($tanggal_awal, $tanggal_akhir);
+    function getListTerapisTrxProduk($tanggal_awal, $tanggal_akhir);
 }

@@ -284,6 +284,7 @@ Route::controller(KomisiGajiController::class)->group(function () {
     Route::get("/komisi_gaji/terapis/print/rekap", "print_rekap_terapis")->middleware(OnlyMemberMiddleware::class);
     Route::get("/komisi_gaji/user/print/rekap", "print_rekap_user")->middleware(OnlyMemberMiddleware::class);
     Route::get("/komisi_gaji/supplier/print/rekap", "print_supplier")->middleware(OnlyMemberMiddleware::class);
+    Route::get("/komisi_gaji/terapis/print/product", "print_list_komisi_terapis_product")->middleware(OnlyMemberMiddleware::class);
 });
 
 
