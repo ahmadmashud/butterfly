@@ -6,6 +6,7 @@
 </head>
 <style>
     .customers {
+        font-size:14px;
         font-family: Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
@@ -14,6 +15,7 @@
 
     .customers td,
     .customers th {
+        text-align: center;
         border: 1px solid #ddd;
         padding: 8px;
     }
@@ -27,6 +29,7 @@
     }
 
     .customers th {
+        text-align: center;
         padding-top: 12px;
         padding-bottom: 12px;
         text-align: left;
@@ -50,6 +53,35 @@
     .text {
         text-align: center;
     }
+
+
+    /* Add responsive column widths */
+    th:nth-child(1),
+    td:nth-child(1) { width: 10%; } /* No */
+    
+    th:nth-child(2),
+    td:nth-child(2) { width: 20%; } /* ID Terapis */
+    
+    th:nth-child(3),
+    td:nth-child(3) { width: 20%; } /* Nama */
+    
+    th:nth-child(4),
+    td:nth-child(4) { width: 20%; } /* Paket */
+    
+    th:nth-child(5),
+    td:nth-child(5) { width: 11%; } /* Total Sesi */
+    
+    th:nth-child(6),
+    td:nth-child(6) { width: 11%; } /* Total Pdk */
+    
+    th:nth-child(7),
+    td:nth-child(7) { width: 35%; } /* Fee Sesi */
+    
+    th:nth-child(8),
+    td:nth-child(8) { width: 35%; } /* Komisi Produk */
+    
+    th:nth-child(9),
+    td:nth-child(9) { width: 35%; } /* Total */
 </style>
 
 <body>
@@ -65,7 +97,7 @@
     <table class="customers">
         <thead>
             <tr>
-                <th style="width: 50px;">No</th>
+                <th>No</th>
                 <th>ID Terapis</th>
                 <th>Nama</th>
                 <th>Paket</th>
@@ -121,18 +153,27 @@
     <table class="customers">
         <tfoot>
             <tr>
-                <td colspan="4">
-                    Total
-                </td>
-                <td class="text"> @convert($grand_total_sesi) </td>
-                <td class="text"> @convert($grand_qty_pdk) </td>
+                <td>Total Sesi:</td>
+                <td class="text">{{ $grand_total_sesi }}</td>
+            </tr>
+            <tr>
+                <td>Total Pdk:</td>
+                <td class="text">{{ $grand_qty_pdk }} </td>
+            </tr>
+            <tr>
+                <td>Total Fee Sesi:</td>
                 <td class="number">@convert($grand_total_fee_sesi)</td>
+            </tr>
+            <tr>
+                <td>Total Komisi Produk:</td>    
                 <td class="number">@convert($grand_total_komisi_terapis)</td>
+            </tr>
+            <tr>
+                <td>Grand Total:</td>   
                 <td class="number">@convert($grand_total)</td>
             </tr>
         </tfoot>
     </table>
-
 
 </body>
 </html>
