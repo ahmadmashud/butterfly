@@ -202,6 +202,13 @@ class TransactionServiceImpl implements TransactionService
                 $this->generateKomisiSupplier($transaction);
                 $this->generateKomisiTerapis($transaction);
             }
+
+            // update flag in terapis
+            $terapis = Terapis::where('id', $transaction->id_terapis)->firstOrFail();
+            $terapis->status = 'AVAILABLE';
+            $terapis->save();
+
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
