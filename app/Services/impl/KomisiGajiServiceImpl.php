@@ -100,7 +100,7 @@ class KomisiGajiServiceImpl implements KomisiGajiService
                 'sesi' => $group->sum('sesi'),
                 'total' => $group->sum('total')
             ];
-        })->sortByDesc('tanggal');
+        })->sortBy('tanggal');
     }
 
     function getRekapTerapis($tanggal_awal, $tanggal_akhir)

@@ -71,6 +71,11 @@
             <td>: </td>
             <td> {{ $data->terapis->nama }} - {{ $data->terapis->code }}</td>
         </tr>
+        <tr class="title">
+            <td> <label>Kasir</label></td>
+            <td>: </td>
+            <td> {{ $data->sales->nama }}</td>
+        </tr>
     </table>
     <hr width="100%" style="border-top: 3px line #bbb;" />
     <table style="width: 100%;">
