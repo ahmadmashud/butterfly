@@ -187,7 +187,7 @@
                                                 <label>Credit: </label>
                                             </div>
                                             <div class="col-sm-8 form-group">
-                                                <input id="credit" name="credit" class="form-control calculate_kembalian" type="text">
+                                                <input id="credit" name="credit" class="form-control calculate_rest_bill_of_credit calculate_kembalian" type="text">
                                             </div>
                                         </div>
                                         <div class="row" id="m_cash" style="display: none;">

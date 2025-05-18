@@ -216,6 +216,18 @@ $("#form_payment").each(function () {
     });
 });
 
+
+$(document).on('keyup', '.calculate_rest_bill_of_credit', function (e) {
+    var totalTagihan = accounting.unformat($('[name=total]').val());
+    var totalCredit = accounting.unformat($('[name=credit]').val());
+    var totalRestBill = totalTagihan - totalCredit;
+    if (totalRestBill > 0) {
+        $('[name=cash]').val(totalRestBill);
+    }else{
+        $('[name=cash]').val(0);
+    }
+});
+
 $(document).on('keyup', '.calculate_kembalian', function (e) {
     var totalTagihan = accounting.unformat($('[name=total]').val());
     var totalCash = accounting.unformat($('[name=cash]').val());
